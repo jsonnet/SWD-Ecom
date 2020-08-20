@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="{% static 'css/nicest_ecommerce.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>{% block title %}Thin Air E-Commerce{% endblock %}</title>
+</head>
+
+<body>
+<!-- Side navigation -->
+<div class="sidenav">
+    <a href="/">Home</a>
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'registration' %}">Register</a>
+    <a href="#">More coming soon {{ BASE_DIR }}</a>
+</div>
+
+<!-- Page content -->
+<div class="main" class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-8">
+            <h1 class="mt-2">Thin Air LTD E-Commerce</h1>
+            <h3 class="text-muted"> the shop where you are going to be ripped of</h3>
+            <hr class="mt-0 mb-4">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>
