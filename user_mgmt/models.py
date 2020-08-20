@@ -1,24 +1,28 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
-# Create your models here.
 class UserProfile(models.Model):
-    # The email of the user to log in with
-    username = models.EmailField(db_index=True, unique=True)
+    # Extend existing django user model
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # Password of the user
-    password = models.CharField(max_length=30)
+    # The email of the user to log in with
+    username = models.EmailField(unique=True, blank=False, error_messages={
+            'unique': "A user with that username already exists."
+        })
+
+    # Password of the user (already exists)
+    # password = models.CharField(max_length=30, blank=False)
 
     # First name and last name of user
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30, blank=False)
+    last_name = models.CharField(max_length=30, blank=False)
 
-    # Is the email verified
-    enabled = models.BooleanField(default=False)
+    # Is the email verified initially false
+    user.is_active = enabled = models.BooleanField(default=False)
 
     # A timestamp when this user was created. AUTO-GEN
     datetime_joined = models.DateTimeField(auto_now_add=True)
 
-    # FIXME
     # A unique token AUTO-GEN
     activation_token = models.CharField(max_length=30, unique=True)
