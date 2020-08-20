@@ -123,3 +123,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "simple_ecommerce/static",
 ]
+
+LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = 'login'

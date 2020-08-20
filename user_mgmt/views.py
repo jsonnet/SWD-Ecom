@@ -1,47 +1,33 @@
-from django.contrib.auth import authenticate, logout
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import reverse
-from django.contrib.auth.models import User
-from . import models
+from django.contrib import messages
+from django.contrib.auth import logout
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render, reverse
+
+from .forms import UserRegisterForm
 
 
 def index(request):
-    return HttpResponse("Hello, accounts. Here should be two buttons for login and register")
-
-
-def login_view(request):
-    return HttpResponse("Login")
+    return redirect('login')  # Temporary
 
 
 # Logs you out and navigates to index
 def logout_view(request):
     logout(request)
+    messages.success(request, f'You have been logged out')
     return HttpResponseRedirect(reverse('index'))
 
 
 def register(request):
-    # TODO WIP
-    if request.method == 'POST':
-        email = request.POST.get('email', None)
-        password = request.POST.get('pwd', None)
-        first_name = request.POST.get('fname', None)
-        last_name = request.POST.get('lname', None)
-        user = User.objects.create_user(username=email, password=password)
+    if request.POST:
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():  # valid submit
+            form.save()  # save user
+            email = form.cleaned_data.get('username')
+            # first_name = form.cleaned_data.get('first_name')
+            # last_name = form.cleaned_data.get('last_name')
 
-        if user is not None:
-            user.save()
-
-            user_profile = models.UserProfile()
-            user_profile.username = email
-            user_profile.first_name = first_name
-            user_profile.last_name = last_name
-
-            # FIXME random token here
-            user_profile.activation_token = 0
-
-            user_profile.user = user
-            user_profile.save()
-            authenticate(request, user)
-
-            return HttpResponseRedirect(reverse('index'))
-    return HttpResponse("New user register! CREATE HTML instead")
+            messages.success(request, f'Your account {email} has been created! Please verify your email TOKEN_HERE')
+            return redirect('login')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'user_mgmt/register.html', {'form': form})
