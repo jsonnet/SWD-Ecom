@@ -16,10 +16,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
 from . import views as views_eco
 
 urlpatterns = [
     path('', views_eco.index, name='index'),
     path('admin/', admin.site.urls),
-    path('accounts/', include('user_mgmt.urls'))
+    url(r'^accounts/', include('user_mgmt.urls'))
 ]
