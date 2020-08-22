@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 
 class UserProfile(AbstractBaseUser):
     # Extend existing django user model
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
     # The email of the user to log in with
@@ -16,13 +15,14 @@ class UserProfile(AbstractBaseUser):
     last_name = models.CharField(max_length=30, blank=False)
 
     # Is the email verified initially false
-    user.is_active = enabled = models.BooleanField(default=False)
+    enabled = models.BooleanField(default=False)
 
     # A timestamp when this user was created. AUTO-GEN
     datetime_joined = models.DateTimeField(verbose_name='datetime joined', auto_now_add=True)
 
     # A unique token AUTO-GEN
     activation_token = models.CharField(max_length=30, unique=True)
+
 
 
     USERNAME_FIELD = 'username'

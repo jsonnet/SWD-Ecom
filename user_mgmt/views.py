@@ -4,6 +4,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 
 from .forms import UserRegisterForm
+from django.utils.crypto import get_random_string
+
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger('django')
 
 
 def index(request):
@@ -19,14 +25,20 @@ def logout_view(request):
 
 def register(request):
     if request.POST:
-        form = UserRegisterForm(request.POST)
+        form = UserRegisterForm(request.POST, request.FILES)
         if form.is_valid():  # valid submit
-            form.save()  # save user
-            email = form.cleaned_data.get('username')
-            # first_name = form.cleaned_data.get('first_name')
-            # last_name = form.cleaned_data.get('last_name')
+            user_saved = form.save(commit=False)  # save user
+            #generate random token for email verification
+            token = get_random_string(length=32) 
+            user_saved.activation_token = token
 
-            messages.success(request, f'Your account {email} has been created! Please verify your email TOKEN_HERE')
+            #get cleaned data
+            cleaned_data = form.cleaned_data
+            email = cleaned_data.get('username')
+
+            user_saved.save()
+
+            logger.info( f'Your account {email} has been created! Please verify your email /accounts/{email}/verify/{token}')
             return redirect('login')
     else:
         form = UserRegisterForm()
