@@ -11,7 +11,7 @@ class UserAccountManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password=None):
         if not email:
             raise ValueError('Email must be set!')
-        user = self.model(email=email, first_name=first_name, last_name=last_name)
+        user = self.model(username=username, email=email, first_name=first_name, last_name=last_name)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -27,7 +27,7 @@ class UserAccountManager(BaseUserManager):
 
 class UserProfile(AbstractUser):
     # Extend existing django user model
-    #user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
 
     # The email of the user to log in with

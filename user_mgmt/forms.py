@@ -12,6 +12,7 @@ class UserRegisterForm(UserCreationForm):
 
         for fieldname in ['password1', 'password2']:
             self.fields[fieldname].help_text = None
+        
 
 
 
