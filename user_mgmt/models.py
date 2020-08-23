@@ -53,6 +53,6 @@ class UserProfile(AbstractUser):
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name', ]
 
     def __str__(self):
-        return f'{self.user.username}'
+        return self.username
 
 
