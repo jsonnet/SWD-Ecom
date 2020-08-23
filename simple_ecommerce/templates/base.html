@@ -12,17 +12,32 @@
 </head>
 
 <body>
-<!-- Side navigation -->
-<div class="sidenav">
-    <a href="{% url 'index' %}">Home</a>
+
+<nav class="navbar navbar-default" id="login_bar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+    
+    <span class="glyphicon glyphicon-user" style="color:white"></span>
+    <span id="login_name"><b>Logged in as {{user.first_name}}:</b></span>
     {% if user.is_authenticated %}
-        {{ user.username }}
+        <a href="#">Account</a>
         <a href="{% url 'logout' %}">Logout</a>
     {% else %}
+
         <a href="{% url 'login' %}">Login</a>
         <a href="{% url 'registration' %}">Register</a>
     {% endif %}
+
+
+    </div>
+  </div>
+</nav>
+
+<!-- Side navigation -->
+<div class="sidenav">
+    <a href="{% url 'index' %}">Home</a>
 </div>
+
 
 <!-- Page content -->
 <div class="main" class="container">
