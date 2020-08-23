@@ -6,6 +6,8 @@ from django.shortcuts import redirect, render, reverse
 from .forms import UserRegisterForm
 from django.utils.crypto import get_random_string
 
+from django.contrib.auth import get_user_model
+
 import logging
 
 # Get an instance of a logger
@@ -30,7 +32,7 @@ def register(request):
             user_saved = form.save(commit=False)  # save user
             #generate random token for email verification
             token = get_random_string(length=32) 
-            user_saved.activation_token = token
+            user_saved.acivation_token = token
 
             #get cleaned data
             cleaned_data = form.cleaned_data
@@ -38,7 +40,9 @@ def register(request):
 
             user_saved.save()
 
+            logger.info(get_user_model().objects.all())
             logger.info( f'Your account {email} has been created! Please verify your email /accounts/{email}/verify/{token}')
+
             return redirect('login')
     else:
         form = UserRegisterForm()
