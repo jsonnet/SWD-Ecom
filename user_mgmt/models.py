@@ -25,11 +25,8 @@ class UserAccountManager(BaseUserManager):
     def get_by_natural_key(self, email_):
         return self.get(username=email_)
 
+
 class UserProfile(AbstractUser):
-    # Extend existing django user model
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-
-
     # The email of the user to log in with
     username = models.EmailField(unique=True, blank=False, error_messages={'unique': "A user with that username already exists."})
 
@@ -37,8 +34,8 @@ class UserProfile(AbstractUser):
     first_name = models.CharField(max_length=30, blank=False)
     last_name = models.CharField(max_length=30, blank=False)
 
-    # Is the email verified initially false
-    enabled = models.BooleanField(default=False)
+    # Is the email verified initially false # TODO
+    is_active = enabled = models.BooleanField(default=False)
 
     # A timestamp when this user was created. AUTO-GEN
     datetime_joined = models.DateTimeField(verbose_name='datetime joined', auto_now_add=True)
