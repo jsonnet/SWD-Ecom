@@ -14,23 +14,19 @@
 <body>
 
 <nav class="navbar navbar-default" id="login_bar">
-  <div class="container-fluid">
-    <div class="navbar-header">
-    
-    <span class="glyphicon glyphicon-user" style="color:white"></span>
-    {% if user.is_authenticated %}
-    <span id="login_name"><b>Logged in as {{user.first_name}}:</b></span>
-        <a href="#">Account</a>
-        <a href="{% url 'logout' %}">Logout</a>
-    {% else %}
+    <div class="container-fluid">
+        <div class="navbar-header">
+            {% if user.is_authenticated %}
+                <span id="login_name"><b>Logged in as {{ user.username }}</b></span>
+                <a href="#">Account</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
 
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'registration' %}">Register</a>
-    {% endif %}
-
-
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'registration' %}">Register</a>
+            {% endif %}
+        </div>
     </div>
-  </div>
 </nav>
 
 <!-- Side navigation -->
@@ -56,8 +52,8 @@
             <h3 class="text-muted"> the shop where you are going to be ripped of</h3>
             <hr class="mt-0 mb-4">
             <div class="container">
-            {% block content %}
-            {% endblock %}
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
     </div>
