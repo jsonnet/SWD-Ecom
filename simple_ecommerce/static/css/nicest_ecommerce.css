@@ -1,16 +1,16 @@
 /* The sidebar menu */
 
 #login_bar {
-	background-color:#343434;
+    background-color: #343434;
 }
 
 #login_bar a {
-	color:#33a2ff;
-	padding-left:20px;
+    color: #33a2ff;
+    padding-left: 20px;
 }
 
 #login_name {
-	color:white;
+    color: white;
 }
 
 .sidenav {
@@ -43,4 +43,9 @@
 .main {
     margin-left: 160px; /* Same as the width of the sidebar */
     padding: 0px 10px;
+}
+
+.container {
+	display: flex;
+    flex-direction: row;
 }

@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="{% static 'css/nicest_ecommerce.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="7641991400-s26aepc1u29217cleq028fl74l044cru.apps.googleusercontent.com">
     <title>{% block title %}Thin Air E-Commerce{% endblock %}</title>
 </head>
 
@@ -21,7 +23,6 @@
                 <a href="#">Account</a>
                 <a href="{% url 'logout' %}">Logout</a>
             {% else %}
-
                 <a href="{% url 'login' %}">Login</a>
                 <a href="{% url 'registration' %}">Register</a>
             {% endif %}

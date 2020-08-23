@@ -47,3 +47,10 @@ def verify_user(request, email, token):
     print(email)
     print(token)
     pass
+
+
+def reset_pw(request):
+    # TODO Creating a link with a password reset token.
+    # get username from from via POST request
+    # handle sth to generate a token connected to this user to generate a link
+    return render(request, 'user_mgmt/reset.html')
