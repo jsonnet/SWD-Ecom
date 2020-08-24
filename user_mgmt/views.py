@@ -28,7 +28,7 @@ def register(request):
             # FIXME does not work currently, it won't save in user!
             # generate random token for email verification
             token = get_random_string(length=32)
-            user.acivation_token = token
+            user.activation_token = token
 
             email = form.cleaned_data.get('username')  # retrieve form data
 
@@ -60,7 +60,7 @@ def verify_user(request, email, token):
     except UserProfile.DoesNotExist:  # the objects can fail with DoesNotExists if a wrong email was provided
         pass
 
-    return HttpResponse('The provided details for {} with {} where wrong or already used'.format(email, token))
+    return HttpResponse('The provided details for {} with {} where wrong or already used {}'.format(email, token, current_user.activation_token))
 
 
 def reset_pw(request):
