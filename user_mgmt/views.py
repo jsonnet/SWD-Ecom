@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 from django.utils.crypto import get_random_string
 
 from .forms import UserRegisterForm
+from .models import UserProfile
 
 
 def index(request):
@@ -24,6 +25,7 @@ def register(request):
         if form.is_valid():  # valid submit
             user = form.save(commit=False)  # create user but dont save just yet
 
+            # FIXME does not work currently, it won't save in user!
             # generate random token for email verification
             token = get_random_string(length=32)
             user.acivation_token = token
@@ -43,10 +45,22 @@ def register(request):
 
 
 def verify_user(request, email, token):
-    # TODO
-    print(email)
-    print(token)
-    pass
+    try:
+        # Get the user from the email provided
+        current_user: UserProfile = UserProfile.objects.get(username=email)
+        # obviously request.user does not work as we are not logged in thus AnonymousUser
+
+        if not current_user.enabled and token == current_user.activation_token:
+            current_user.enabled = True
+
+            # now update and save user again
+            current_user.save()
+
+            return HttpResponse('The user {} has been verified! You can now log in'.format(current_user.username))
+    except UserProfile.DoesNotExist:  # the objects can fail with DoesNotExists if a wrong email was provided
+        pass
+
+    return HttpResponse('The provided details for {} with {} where wrong or already used'.format(email, token))
 
 
 def reset_pw(request):

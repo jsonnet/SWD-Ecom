@@ -1,26 +1,26 @@
-from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
 
-# User = settings.AUTH_USER_MODEL
-
 from django.contrib.auth.models import BaseUserManager, AbstractUser, PermissionsMixin
 
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
-# FIXME needs redoing asap!
+
 class UserAccountManager(BaseUserManager):
-    def create_user(self, username, first_name, last_name, password=None):
+    def create_user(self, username, first_name, last_name, password):
         if not username:
             raise ValueError('User must be set!')
+
         user = self.model(username=username, first_name=first_name, last_name=last_name)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    # FIXME not working right now as of is_Admin
     def create_superuser(self, username, first_name, last_name, password):
         user = self.create_user(username, first_name, last_name, password)
-        user.is_admin = True
+        user.is_staff = True  # access to admin panel
+        user.is_superuser = True  # access to perms in admin panel
         user.save(using=self._db)
         return user
 
@@ -34,8 +34,8 @@ class UserProfile(AbstractUser):
     first_name = models.CharField(max_length=30, blank=False)
     last_name = models.CharField(max_length=30, blank=False)
 
-    # Is the email verified initially false # TODO
-    AbstractUser.is_active = enabled = models.BooleanField(default=False)
+    # Is the email verified initially false
+    enabled = models.BooleanField(default=False)
 
     # A timestamp when this user was created. AUTO-GEN
     datetime_joined = models.DateTimeField(verbose_name='datetime joined', auto_now_add=True)
@@ -48,15 +48,17 @@ class UserProfile(AbstractUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['first_name', 'last_name', ]
 
-    is_admin = False
-
     def __str__(self):
         return self.username
 
-    # TODO
-    # @property
-    # def is_staff(self):
-    #     "Is the user a member of staff?"
-    #     # Simplest possible answer: All admins are staff
-    #     return self.is_admin
 
+# Fire if instance of UserProfile is being saved
+@receiver(pre_save, sender=UserProfile)
+def set_new_user_inactive(sender, instance, **kwargs):
+    if instance._state.adding is True:
+        # Creating User
+        instance.is_active = instance.enabled  # for registration
+    else:
+        # Updating User
+        instance.is_active = instance.enabled  # for verify
+        pass

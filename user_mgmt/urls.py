@@ -8,6 +8,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='user_mgmt/login.html'), name='login'),
     path('logout', views.logout_view, name='logout'),
     path('registration/', views.register, name='registration'),
-    path('<email>/verify/<token>', views.verify_user, name='verify'),
+    path('<str:email>/verify/<str:token>', views.verify_user, name='verify'),
     path('password-reset', views.reset_pw, name='pw-reset')
 ]

@@ -23,5 +23,5 @@ from . import views as views_eco
 urlpatterns = [
     path('', views_eco.index, name='index'),
     path('admin/', admin.site.urls),
-    url(r'^accounts/', include('user_mgmt.urls'))
+    path('accounts/', include('user_mgmt.urls'))
 ]
