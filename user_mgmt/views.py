@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 from django.utils.crypto import get_random_string
 
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm,UserPasswordResetForm
 from .models import UserProfile
 
 
@@ -65,4 +65,22 @@ def reset_pw(request):
     # TODO Creating a link with a password reset token.
     # get username from from via POST request
     # handle sth to generate a token connected to this user to generate a link
-    return render(request, 'user_mgmt/reset.html')
+
+    form = UserPasswordResetForm(request.POST, request.FILES)
+    if form.is_valid():
+        
+        #retrieve user from form
+        form_user = form.save(commit=False)
+
+        #now we update the password from the database
+        user: UserProfile = UserProfile.objects.get(form_user.username)
+        user.set_password(form_user.password)
+        user.save()
+
+        messages.success(request, 'changed password')
+        return redirect('login')
+
+    else:
+        form = UserPasswordResetForm()
+
+    return render(request, 'user_mgmt/reset.html', {'form':form})
