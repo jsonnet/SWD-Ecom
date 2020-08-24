@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render, reverse
 from django.utils.crypto import get_random_string
 
 from .forms import *
-from .models import UserProfile
+from .models import *
 
 import logging
 
@@ -77,15 +77,22 @@ def reset_pw_req(request):
         #retrieve user from form
         username = form.cleaned_data.get('username')
 
-        #check if user exists
+        #check if user exists (only create entry then)
         try:
             user: UserProfile = UserProfile.objects.get(username=username)
             #generate token and save it in activation token field
-            token = get_random_string(length=32)
-            user.activation_token = token
-            user.save()
 
-            logger.info('sent password reset link /{}/pw-reset/{}'.format(username, token))
+            random_token = get_random_string(length=32)
+
+            #check if token exists
+            try: 
+                token: PWResetToken = PWResetToken.objects.get(username=username)
+                token.token = random_token
+            except PWResetToken.DoesNotExist:
+                token = PWResetToken(token=random_token, username=username)
+                token.save()
+
+            logger.info('sent password reset link /{}/pw-reset/{}'.format(username,random_token))
 
         except User.DoesNotExist:
             pass
@@ -99,24 +106,40 @@ def reset_pw_req(request):
 
     return render(request, 'user_mgmt/reset_request.html', {'form':form})
 
-def reset_pw(request):
-    # TODO Creating a link with a password reset token.
-    # get username from from via POST request
-    # handle sth to generate a token connected to this user to generate a link
+def reset_pw(request, username, token):
 
-    form = UserPasswordResetForm(request.POST, request.FILES)
-    if form.is_valid():
-        
-        #retrieve user from form
-        form_user = form.save(commit=False)
+    if request.POST:
 
-        #now we update the password from the database
-        user: UserProfile = UserProfile.objects.get(form_user.username)
-        user.set_password(form_user.password)
-        user.save()
+        form = UserPasswordResetForm(request.POST, request.FILES)
+        if form.is_valid():
+            
+            #retrieve user from form
+            password_new = form.cleaned_data.get('password')
 
-        messages.success(request, 'changed password')
-        return redirect('login')
+            #check if user exists
+            try:
+                actual_token: PWResetToken = PWResetToken.objects.get(username=username)
+                user: UserProfile = UserProfile.objects.get(username=username)
+
+                #generate token and save it in activation token field
+
+                #check if tokens match
+                if token == actual_token and user.enabled == True:
+                    
+                    user.set_password(password_new)
+                    #invalidate token and save password
+                    token.delete()
+                    user.save()
+
+                messages.success(request, 'changed password')
+
+            except User.DoesNotExist:
+                pass
+            except e: #TODO
+                logger.error(e)
+
+
+            return redirect('login')
 
     else:
         form = UserPasswordResetForm()

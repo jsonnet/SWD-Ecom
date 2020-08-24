@@ -51,6 +51,15 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return self.username
 
+class PWResetToken(models.Model):
+     # The email of the user to log in with
+    username = models.EmailField(unique=True, blank=False)
+    token = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.username
+
+
 
 # Fire if instance of UserProfile is being saved
 @receiver(pre_save, sender=UserProfile)
