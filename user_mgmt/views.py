@@ -114,7 +114,7 @@ def reset_pw(request, username, token):
         if form.is_valid():
             
             #retrieve user from form
-            password_new = form.cleaned_data.get('password')
+            password_new = form.cleaned_data.get('password_new1')
 
             #check if user exists
             try:
@@ -124,18 +124,25 @@ def reset_pw(request, username, token):
                 #generate token and save it in activation token field
 
                 #check if tokens match
-                if token == actual_token and user.enabled == True:
+                if token == actual_token.token and user.enabled == True:
                     
+                    logger.info(password_new)
                     user.set_password(password_new)
                     #invalidate token and save password
-                    token.delete()
+                    actual_token.delete()
                     user.save()
+                else:
+                    #debug
+                    if token != actual_token.token:
+                        logger.error('token: {}, actual token: {}'.format(token, actual_token.token))
+                    if user.enabled == False:
+                        logger.error('user is not enabled')
 
                 messages.success(request, 'changed password')
 
             except User.DoesNotExist:
                 pass
-            except e: #TODO
+            except Exception as e: #TODO
                 logger.error(e)
 
 
