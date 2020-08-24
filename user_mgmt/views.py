@@ -4,8 +4,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 from django.utils.crypto import get_random_string
 
-from .forms import UserRegisterForm,UserPasswordResetForm
+from .forms import *
 from .models import UserProfile
+
+import logging
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+#setup logger
+logger = logging.getLogger('django')
 
 
 def index(request):
@@ -33,7 +41,7 @@ def register(request):
             user.save()  # now save user
 
             # Display message in template
-            messages.success(request,
+            logger.info(
                              f'Your account {user.username} has been created! Please verify your email /accounts/{user.username}/verify/{token}')
 
             return redirect('login')
@@ -60,6 +68,36 @@ def verify_user(request, email, token):
 
     return HttpResponse('The provided details for {} with {} where wrong or already used {}'.format(email, token))
 
+#request for resetting a password (/accounts/password-reset)
+def reset_pw_req(request):
+
+    form = UserPasswordResetRequestForm(request.POST, request.FILES)
+    if form.is_valid():
+        
+        #retrieve user from form
+        username = form.cleaned_data.get('username')
+
+        #check if user exists
+        try:
+            user: UserProfile = UserProfile.objects.get(username=username)
+            #generate token and save it in activation token field
+            token = get_random_string(length=32)
+            user.activation_token = token
+            user.save()
+
+            logger.info('sent password reset link /{}/pw-reset/{}'.format(username, token))
+
+        except User.DoesNotExist:
+            pass
+
+        #send message either way
+        messages.success(request, 'sent password reset link to mail address if it exists')
+        return redirect('login')
+
+    else:
+        form = UserPasswordResetRequestForm()
+
+    return render(request, 'user_mgmt/reset_request.html', {'form':form})
 
 def reset_pw(request):
     # TODO Creating a link with a password reset token.

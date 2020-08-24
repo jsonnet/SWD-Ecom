@@ -21,3 +21,6 @@ class UserPasswordResetForm(forms.Form):
 
         return self.cleaned_data
 
+class UserPasswordResetRequestForm(forms.Form):
+    username = forms.EmailField(widget=forms.TextInput(attrs={'type':'email', 'placeholder':'Your username',  'class' : 'span'}))
+
