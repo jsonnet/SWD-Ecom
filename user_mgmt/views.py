@@ -4,6 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 from django.utils.crypto import get_random_string
 
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
 from .forms import UserRegisterForm
 from .models import UserProfile
 
@@ -40,6 +43,35 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'user_mgmt/register.html', {'form': form})
+
+
+
+def sso_verify_login(request):
+    token = 0
+
+    if request.POST:
+        token = 0
+        # TODO get GET param id_token=
+
+    try:
+        # Specify the CLIENT_ID of the app that accesses the backend:
+        CLIENT_ID = '7641991400-s26aepc1u29217cleq028fl74l044cru.apps.googleusercontent.com'
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+
+        # ID token is valid. Get the user's Google Account ID from the decoded token.
+        userid = idinfo['sub']
+        email = idinfo['email']
+        enabled = idinfo['email_verified']
+        first_name = idinfo['family_name']
+        last_name = idinfo['sub']
+
+        # TODO create user
+
+    except ValueError:
+        # Invalid token
+        pass
+
+    return None  #TODO just a get with the username
 
 
 def verify_user(request, email, token):

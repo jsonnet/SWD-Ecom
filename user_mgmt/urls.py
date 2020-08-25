@@ -9,5 +9,7 @@ urlpatterns = [
     path('logout', views.logout_view, name='logout'),
     path('registration/', views.register, name='registration'),
     path('<str:email>/verify/<str:token>', views.verify_user, name='verify'),
-    path('password-reset', views.reset_pw, name='pw-reset')
+    path('password-reset', views.reset_pw, name='pw-reset'),
+
+    path('sso-login', views.sso_verify_login, name='sso-login')
 ]
