@@ -7,10 +7,12 @@
             console.log(id_token);
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
+            xhr.open('POST', '/accounts/sso-login');
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onload = function () {
                 console.log('Signed in as: ' + xhr.responseText);
+                if (!xhr.responseText.includes('Error'))
+                    window.location.href="../../"
             };
             xhr.send('idtoken=' + id_token);
         }

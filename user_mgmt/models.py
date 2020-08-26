@@ -1,14 +1,12 @@
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.db import models
-
-from django.contrib.auth.models import BaseUserManager, AbstractUser, PermissionsMixin
-
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 
 class UserAccountManager(BaseUserManager):
-    def create_user(self, username, first_name, last_name, password):
+    def create_user(self, username, first_name, last_name, password=None):
         if not username:
             raise ValueError('User must be set!')
 
