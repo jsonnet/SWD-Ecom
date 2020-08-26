@@ -1,8 +1,6 @@
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.db import models
-
-from django.contrib.auth.models import BaseUserManager, AbstractUser, PermissionsMixin
-
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
@@ -51,14 +49,14 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return self.username
 
+
 class PWResetToken(models.Model):
-     # The email of the user to log in with
+    # The email of the user to log in with
     username = models.EmailField(unique=True, blank=False)
-    token = models.CharField(max_length=64)
+    token = models.CharField(max_length=33)
 
     def __str__(self):
         return self.username
-
 
 
 # Fire if instance of UserProfile is being saved

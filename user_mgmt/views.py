@@ -7,14 +7,6 @@ from django.utils.crypto import get_random_string
 from .forms import *
 from .models import *
 
-import logging
-
-from django.contrib.auth import get_user_model
-User = get_user_model()
-
-#setup logger
-logger = logging.getLogger('django')
-
 
 def index(request):
     return redirect('login')  # Temporary
@@ -41,8 +33,9 @@ def register(request):
             user.save()  # now save user
 
             # Display message in template
-            logger.info(
-                             f'Your account {user.username} has been created! Please verify your email /accounts/{user.username}/verify/{token}')
+            messages.success(
+                f'Your account {user.username} has been created! Please verify your email /accounts/{user.username}/verify/{token}')
+            print(token)
 
             return redirect('login')
     else:
@@ -66,89 +59,90 @@ def verify_user(request, email, token):
     except UserProfile.DoesNotExist:  # the objects can fail with DoesNotExists if a wrong email was provided
         pass
 
-    return HttpResponse('The provided details for {} with {} where wrong or already used {}'.format(email, token))
+    return HttpResponse('The provided details for {} with {} where wrong or already used'.format(email, token))
 
-#request for resetting a password (/accounts/password-reset)
+
+# request for resetting a password (/accounts/password-reset)
 def reset_pw_req(request):
-
     form = UserPasswordResetRequestForm(request.POST, request.FILES)
     if form.is_valid():
-        
-        #retrieve user from form
+
+        # retrieve user from form
         username = form.cleaned_data.get('username')
 
-        #check if user exists (only create entry then)
+        # check if user exists (only create entry then)
         try:
-            user: UserProfile = UserProfile.objects.get(username=username)
-            #generate token and save it in activation token field
+            user = UserProfile.objects.get(username=username)
+            # TODO may generate ForeignKey in token model for user
 
+            # generate token and save it in activation token field
             random_token = get_random_string(length=32)
 
-            #check if token exists
-            try: 
-                token: PWResetToken = PWResetToken.objects.get(username=username)
+            # check if token exists
+            try:
+                token = PWResetToken.objects.get(username=username)
                 token.token = random_token
             except PWResetToken.DoesNotExist:
                 token = PWResetToken(token=random_token, username=username)
                 token.save()
 
-            logger.info('sent password reset link /{}/pw-reset/{}'.format(username,random_token))
+            messages.success('sent password reset link! accounts/{}/pw-reset/{}'.format(username, random_token))
+            print('reset link accounts/{}/pw-reset/{}'.format(username, random_token))
 
-        except User.DoesNotExist:
-            pass
+        except UserProfile.DoesNotExist:
+            messages.error(request, 'An error occurred!')
 
-        #send message either way
-        messages.success(request, 'sent password reset link to mail address if it exists')
+        # send message either way
         return redirect('login')
 
     else:
         form = UserPasswordResetRequestForm()
 
-    return render(request, 'user_mgmt/reset_request.html', {'form':form})
+    return render(request, 'user_mgmt/reset.html', {'form': form})
+
 
 def reset_pw(request, username, token):
-
     if request.POST:
 
         form = UserPasswordResetForm(request.POST, request.FILES)
         if form.is_valid():
-            
-            #retrieve user from form
+
+            # retrieve user from form
             password_new = form.cleaned_data.get('password_new1')
 
-            #check if user exists
+            # check if user exists
             try:
-                actual_token: PWResetToken = PWResetToken.objects.get(username=username)
-                user: UserProfile = UserProfile.objects.get(username=username)
+                actual_token = PWResetToken.objects.get(username=username)
+                user = UserProfile.objects.get(username=username)
 
-                #generate token and save it in activation token field
+                # generate token and save it in activation token field
 
-                #check if tokens match
-                if token == actual_token.token and user.enabled == True:
-                    
-                    logger.info(password_new)
+                # check if tokens match
+
+                if token == actual_token.token and user.enabled:
+
                     user.set_password(password_new)
-                    #invalidate token and save password
+
+                    # invalidate token and save password
                     actual_token.delete()
                     user.save()
+                    # else:
+                    #     # debug
+                    #     if token != actual_token.token:
+                    #         messages.error('token: {}, actual token: {}'.format(token, actual_token.token))
+                    #     if not user.enabled:
+                    #         messages.error('user is not enabled')
+
+                    messages.success(request, 'Password successfully changed! You can now login')
                 else:
-                    #debug
-                    if token != actual_token.token:
-                        logger.error('token: {}, actual token: {}'.format(token, actual_token.token))
-                    if user.enabled == False:
-                        logger.error('user is not enabled')
+                    messages.error(request, 'Either the token is invalid or the user not existent')
 
-                messages.success(request, 'changed password')
-
-            except User.DoesNotExist:
+            except UserProfile.DoesNotExist:
                 pass
-            except Exception as e: #TODO
-                logger.error(e)
-
 
             return redirect('login')
 
     else:
         form = UserPasswordResetForm()
 
-    return render(request, 'user_mgmt/reset.html', {'form':form})
+    return render(request, 'user_mgmt/reset.html', {'form': form})

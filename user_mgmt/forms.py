@@ -1,8 +1,8 @@
+from django import forms
+from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm
 
 from user_mgmt.models import UserProfile
-from django.forms import ModelForm
-from django import forms
 
 
 class UserRegisterForm(UserCreationForm):
@@ -10,17 +10,25 @@ class UserRegisterForm(UserCreationForm):
         model = UserProfile
         fields = ['username', 'first_name', 'last_name', 'password1', 'password2']
 
+
 class UserPasswordResetForm(forms.Form):
-    password_new1 = forms.CharField(widget=forms.TextInput(attrs={'type':'password', 'placeholder':'New password',  'class' : 'span'}))
-    password_new2 = forms.CharField(widget=forms.TextInput(attrs={'type':'password', 'placeholder':'Confirm new password',  'class' : 'span'}))
+    password_new1 = forms.CharField(
+        label="Password",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    password_new2 = forms.CharField(
+        label="Password confirmation",
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        strip=False,
+        help_text="Enter the same password as before, for verification.",
+    )
 
     def clean(self):
-        # check if form contains fields
-        if 'password_new1' in self.cleaned_data and 'password_new2' in self.cleaned_data:
-            pass
-
         return self.cleaned_data
 
-class UserPasswordResetRequestForm(forms.Form):
-    username = forms.EmailField(widget=forms.TextInput(attrs={'type':'email', 'placeholder':'Your username',  'class' : 'span'}))
 
+class UserPasswordResetRequestForm(forms.Form):
+    username = forms.EmailField(
+        widget=forms.TextInput(attrs={'type': 'email', 'placeholder': 'Your email', 'class': 'span'}))
