@@ -118,6 +118,10 @@ def reset_pw_req(request):
         # check if user exists (only create entry then)
         try:
             user = UserProfile.objects.get(username=username)
+
+            if user.has_usable_password():
+                raise UserProfile.DoesNotExist
+
             # TODO may generate ForeignKey in token model for user
 
             # generate token and save it in activation token field
