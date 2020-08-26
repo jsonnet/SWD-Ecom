@@ -60,9 +60,9 @@ def sso_verify_login(request):
         # ID token is valid. Get the user's Google Account ID from the decoded token.
         # userid = idinfo['sub']
         email = idinfo['email']
-        enabled = idinfo['email_verified']  # Should always be True, else GAccount is not verified
-        first_name = idinfo['given_name']
-        last_name = idinfo['family_name']
+        enabled = idinfo.get('email_verified', True)  # Should always be True, else GAccount is not verified
+        first_name = idinfo.get('given_name', 'nofirstname')  # default if not first name
+        last_name = idinfo.get('family_name', 'nolastname')  # not every user has a last name
 
         try:
             sUser = UserProfile.objects.get(username=email)
@@ -71,10 +71,10 @@ def sso_verify_login(request):
             # Create user with unusable pw so no one can authenticate
             sUser = UserProfile.objects.create_user(email, first_name, last_name)
             sUser.enabled = enabled
-            sUser.social = True
             sUser.save()
 
         finally:  # else case
+            # login without authenticate as pw is unusable
             login(request, sUser)
 
             return HttpResponse('{}'.format(email))
