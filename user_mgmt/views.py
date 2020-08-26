@@ -1,8 +1,11 @@
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 from django.utils.crypto import get_random_string
+from django.views.decorators.csrf import csrf_exempt
+from google.auth.transport import requests
+from google.oauth2 import id_token
 
 from .forms import *
 from .models import *
@@ -43,6 +46,47 @@ def register(request):
     return render(request, 'user_mgmt/register.html', {'form': form})
 
 
+@csrf_exempt
+def sso_verify_login(request):
+    token = 0
+
+    if request.POST:
+        token = request.POST.get("idtoken", "0")
+
+    try:
+        # Specify the CLIENT_ID of the app that accesses the backend:
+        CLIENT_ID = '7641991400-s26aepc1u29217cleq028fl74l044cru.apps.googleusercontent.com'
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+
+        # ID token is valid. Get the user's Google Account ID from the decoded token.
+        # userid = idinfo['sub']
+        email = idinfo['email']
+        enabled = idinfo.get('email_verified', True)  # Should always be True, else GAccount is not verified
+        first_name = idinfo.get('given_name', 'nofirstname')  # default if not first name
+        last_name = idinfo.get('family_name', 'nolastname')  # not every user has a last name
+
+        try:
+            sUser = UserProfile.objects.get(username=email)
+
+        except UserProfile.DoesNotExist:  # In case DoesNotExist create new social user
+            # Create user with unusable pw so no one can authenticate
+            sUser = UserProfile.objects.create_user(email, first_name, last_name)
+            sUser.enabled = enabled
+            sUser.save()
+
+        finally:  # else case
+            # login without authenticate as pw is unusable
+            login(request, sUser)
+
+            return HttpResponse('{}'.format(email))
+
+    except ValueError:
+        # Invalid token
+        pass
+
+    return HttpResponse('Error invalid token or request')
+
+
 def verify_user(request, email, token):
     try:
         # Get the user from the email provided
@@ -62,6 +106,7 @@ def verify_user(request, email, token):
     return HttpResponse('The provided details for {} with {} where wrong or already used'.format(email, token))
 
 
+# FIXME such that me cannot reset pw by reset, use has_usable_password() to check !!
 # request for resetting a password (/accounts/password-reset)
 def reset_pw_req(request):
     form = UserPasswordResetRequestForm(request.POST, request.FILES)
