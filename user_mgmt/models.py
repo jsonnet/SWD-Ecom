@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 
 class UserAccountManager(BaseUserManager):
-    def create_user(self, username, first_name, last_name, password):
+    def create_user(self, username, first_name, last_name, password=None):
         if not username:
             raise ValueError('User must be set!')
 
