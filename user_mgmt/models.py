@@ -68,4 +68,5 @@ def set_new_user_inactive(sender, instance, **kwargs):
     else:
         # Updating User
         instance.is_active = instance.enabled  # for verify
+        instance.date_joined = instance.datetime_joined  # make it neater
         pass

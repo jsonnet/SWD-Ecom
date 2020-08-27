@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.http import HttpResponse, HttpResponseRedirect
@@ -95,6 +97,7 @@ def verify_user(request, email, token):
 
         if not current_user.enabled and token == current_user.activation_token:
             current_user.enabled = True
+            current_user.datetime_joined = timezone.now()
 
             # now update and save user again
             current_user.save()
@@ -106,7 +109,6 @@ def verify_user(request, email, token):
     return HttpResponse('The provided details for {} with {} where wrong or already used'.format(email, token))
 
 
-# FIXME such that me cannot reset pw by reset, use has_usable_password() to check !!
 # request for resetting a password (/accounts/password-reset)
 def reset_pw_req(request):
     form = UserPasswordResetRequestForm(request.POST, request.FILES)
