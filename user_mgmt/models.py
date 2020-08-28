@@ -37,7 +37,7 @@ class UserProfile(AbstractUser):
     enabled = models.BooleanField(default=False)
 
     # A timestamp when this user was created. AUTO-GEN
-    datetime_joined = models.DateTimeField(verbose_name='datetime joined', auto_now_add=True)
+    datetime_joined = models.DateTimeField(verbose_name='datetime joined')
 
     # A unique token
     activation_token = models.CharField(max_length=32)
@@ -53,11 +53,13 @@ class UserProfile(AbstractUser):
 
 class PWResetToken(models.Model):
     # The email of the user to log in with
-    username = models.EmailField(unique=True, blank=False)
+    # username = models.EmailField(unique=True, blank=False)
+    # Relationship model for security reasons
+    username = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     token = models.CharField(max_length=33)
 
     def __str__(self):
-        return self.username
+        return self.username.username
 
 
 # TODO check params for each key

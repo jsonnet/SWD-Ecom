@@ -121,20 +121,20 @@ def reset_pw_req(request):
         try:
             user = UserProfile.objects.get(username=username)
 
-            if user.has_usable_password():
+            if not user.has_usable_password() or not user.enabled:
                 raise UserProfile.DoesNotExist
-
-            # TODO may generate ForeignKey in token model for user
 
             # generate token and save it in activation token field
             random_token = get_random_string(length=32)
 
             # check if token exists
             try:
-                token = PWResetToken.objects.get(username=username)
+                token = PWResetToken.objects.get(username=user)
                 token.token = random_token
             except PWResetToken.DoesNotExist:
-                token = PWResetToken(token=random_token, username=username)
+                token = PWResetToken(token=random_token, username=user)
+            finally:
+                print(token)
                 token.save()
 
             messages.success(request,
@@ -164,8 +164,8 @@ def reset_pw(request, username, token):
 
             # check if user exists
             try:
-                actual_token = PWResetToken.objects.get(username=username)
                 user = UserProfile.objects.get(username=username)
+                actual_token = PWResetToken.objects.get(username=user)
 
                 # generate token and save it in activation token field
 
