@@ -60,6 +60,27 @@ class PWResetToken(models.Model):
         return self.username
 
 
+# TODO check params for each key
+class Partner(models.Model):
+    pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
+    name = models.CharField(max_length=30)
+    web_site = models.URLField()
+    token = models.CharField(max_length=32)
+
+
+# TODO check params for each key
+class Product(models.Model):
+    pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
+    name = models.CharField(max_length=30)
+    description = models.CharField(max_length=300)
+    slug = models.SlugField()
+    price = models.DecimalField(decimal_places=3, max_digits=6)
+    special_price = models.DecimalField(decimal_places=3, max_digits=6)
+    count = models.IntegerField()
+    image = models.URLField()
+    seller = models.CharField(max_length=22)  # 0 default, u-<id> customer, p-<id> partner
+
+
 # Fire if instance of UserProfile is being saved
 @receiver(pre_save, sender=UserProfile)
 def set_new_user_inactive(sender, instance, **kwargs):
