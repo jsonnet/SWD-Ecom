@@ -1,9 +1,8 @@
-from django.utils import timezone
-
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
+from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
 from google.auth.transport import requests
@@ -30,6 +29,7 @@ def register(request):
         if form.is_valid():  # valid submit
             user = form.save(commit=False)  # create user but dont save just yet
 
+            # token entropy = 190.5 bits (2^191)
             token = get_random_string(length=32)
             user.activation_token = token
 
@@ -38,8 +38,8 @@ def register(request):
             user.save()  # now save user
 
             # Display message in template
-            messages.success(
-                f'Your account {user.username} has been created! Please verify your email /accounts/{user.username}/verify/{token}')
+            messages.success(request,
+                             f'Your account {user.username} has been created! Please verify your email /accounts/{user.username}/verify/{token}')
             print(token)
 
             return redirect('login')
@@ -137,7 +137,8 @@ def reset_pw_req(request):
                 token = PWResetToken(token=random_token, username=username)
                 token.save()
 
-            messages.success('sent password reset link! accounts/{}/pw-reset/{}'.format(username, random_token))
+            messages.success(request,
+                             'sent password reset link! accounts/{}/pw-reset/{}'.format(username, random_token))
             print('reset link accounts/{}/pw-reset/{}'.format(username, random_token))
 
         except UserProfile.DoesNotExist:

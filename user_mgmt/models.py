@@ -19,6 +19,7 @@ class UserAccountManager(BaseUserManager):
         user = self.create_user(username, first_name, last_name, password)
         user.is_staff = True  # access to admin panel
         user.is_superuser = True  # access to perms in admin panel
+        user.enabled = True
         user.save(using=self._db)
         return user
 
