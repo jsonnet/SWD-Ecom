@@ -49,7 +49,7 @@ def product_list(request):
 
     # if we have a paginator set limit/offset the result
     if paginator:
-        dt = dt[(page - 1) * paginator: page*paginator]
+        dt = dt[(page - 1) * paginator: page * paginator]
 
     # serialize to json and nice indent
     dtt = serializers.serialize("json", dt, indent=2)
@@ -89,25 +89,45 @@ def product_details(request, product_id):
         count, _ = dt.filter(slug=product_id).delete()
 
         # check if an object was actually deleted else return error
-        if count is 0:
-            return HttpResponse("No object found", status=404)
+        if count == 0:
+            return HttpResponse(f"No object found for {product_id}\n", status=404)
 
-        return HttpResponse("Object gone forever", status=200)
+        return HttpResponse(f"Object {product_id} gone forever\n", status=200)
 
     return HttpResponse(status=404)
 
 
+# TODO check if everything here is correct
+@csrf_exempt
 @require_POST
 def product_create(request):
     # check if authenticated
     if not is_authenticated(request):
         return HttpResponse(status=401)
 
-    print(request.body)
+    # get bearer token
+    _, token = is_authenticated(request)
+
+    print(request.POST)
+
+    name = request.POST.get('name')
+    desc = request.POST.get('description')
+    price = request.POST.get('price')
+    sprice = request.POST.get('special_price', '-1')
+    count = request.POST.get('count')
+    image = request.POST.get('image', '')
+
+    product = Product(name=name, description=desc, price=price, special_price=sprice, count=count, image=image,
+                      seller=f'p-{token}')
+    try:
+        product.save()
+    except:
+        return HttpResponse('Syntax error when creating a product \n', status=422)
 
     # TODO name, description, price, special_price (?), count, image, seller (? - or from access token?)
     #  takes these from the request#body and create a new object in DB (just like with users)
     #  is only used by partners so seller always p-<id> s.t. we could use the token to identify
     #  on semantic error 422 or 400
+    # curl http://localhost:8000/api/products/create -H "Authorization: Bearer abc" -H "Content-Type: application/x-www-form-urlencoded" -X POST --data 'name=test&desc=more'
 
-    return HttpResponse("hey there", status=201)
+    return HttpResponse("Product created \n", status=201)
