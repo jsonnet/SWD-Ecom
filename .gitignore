@@ -132,3 +132,5 @@ dmypy.json
 .DS_Store
 .idea/
 user_mgmt/migrations/
+
+shop_mgmt/migrations/
