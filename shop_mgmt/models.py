@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.crypto import get_random_string
 
 from django.utils.text import slugify
 
@@ -9,6 +10,12 @@ class Partner(models.Model):
     name = models.CharField(max_length=30)
     web_site = models.URLField()
     token = models.CharField(max_length=32)
+
+    def save(self, *args, **kwargs):
+        # length of 32 has a high enough entropy to get negl collisions
+        self.token = get_random_string(length=32)
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -29,8 +36,13 @@ class Product(models.Model):
     REQUIRED_FIELDS = ['name', 'description', 'price', 'count']
 
     def save(self, *args, **kwargs):
+        # slug auto-gen'd by name
         self.slug = slugify(self.name)
-        super().save()
+
+        # just set to normal price
+        if self.special_price == -1:
+            self.special_price = self.price
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
