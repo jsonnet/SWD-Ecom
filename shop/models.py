@@ -1,4 +1,5 @@
 from django.db import models
+from user_mgmt.models import UserProfile
 
 #P4
 #TODO discuss if Cascade is best option for deletion
