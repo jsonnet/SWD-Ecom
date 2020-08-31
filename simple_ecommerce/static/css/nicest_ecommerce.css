@@ -49,3 +49,7 @@
 	display: flex;
     flex-direction: row;
 }
+
+#product_list {
+	width: 50%;	
+}
