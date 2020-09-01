@@ -7,16 +7,16 @@ from user_mgmt.models import UserProfile
 
 class Payment(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
-    amount = models.IntegerField()
+    amount = models.IntegerField()  # FIXME should be DecimalField
     method = models.CharField(max_length=32)
 
 
 class Address(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
-    user = models.CharField(max_length=30)
+    user = models.CharField(max_length=30)  # FIXME relation to userprofile
     street = models.CharField(max_length=64)
     city = models.CharField(max_length=64)
-    zip_code = models.CharField(max_length=32)
+    zip_code = models.CharField(max_length=5)
     country = models.CharField(max_length=64)
     additional_info = models.CharField(max_length=64)
 
@@ -32,6 +32,6 @@ class Order(models.Model):
 
 class CartItem(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
-    product_id = models.CharField(max_length=64)
+    product_id = models.CharField(max_length=64)  # FIXME change to relation?
     quantity = models.IntegerField()
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
