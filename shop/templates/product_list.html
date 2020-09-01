@@ -1,50 +1,51 @@
 {% extends "base.html" %}
 {% block footer %}
-<script>
-function productDetails(product_id, product_name, product_price, product_count) {
+    <script>
+        function productDetails(product_id, product_name, product_price, product_count) {
+            var details = {slug: product_id, name: product_name, price: product_price, count: product_count}
+            var details_json = JSON.stringify(details)
+            let w = window.open('/shop/products/list#' + details_json)
+        }
 
-	var details = {slug: product_id, name:product_name, price:product_price, count: product_count}
-	var details_json = JSON.stringify(details)
-	let w = window.open('/shop/products/list#'+details_json)
-}
+        window.onload = function () {
+            if (location.hash) {
 
+                var parsed = JSON.parse(decodeURIComponent(location.hash.substr(1)));
 
-window.onload = function() {
-
-if (location.hash) {
-
-	
-	var parsed = JSON.parse(decodeURIComponent(location.hash.substr(1)));
-
-	
-	//add slug, name and price
-	document.getElementById('product_slug').textContent = "Slug:"+parsed.slug;
-	document.getElementById('product_name').textContent = "Name:"+parsed.name;
-	document.getElementById('product_price').textContent = "Price:"+parsed.price;
-	document.getElementById('product_list').style.display = "none";
-}
-}
-</script>
+                //add slug, name and price
+                document.getElementById('product_slug').textContent = "Slug:" + parsed.slug;
+                document.getElementById('product_name').textContent = "Name:" + parsed.name;
+                document.getElementById('product_price').textContent = "Price:" + parsed.price;
+                document.getElementById('product_list').style.display = "none";
+            }
+        }
+    </script>
 {% endblock %}
 {% block content %}
 
-<div id="product_list">
-{% for product in products %}
+    <div class="row">
+		{% for product in products %}
+		<div class="col-lg-4 mt-5">
+			<img class="img-thumbnail" src="{{product.image}}">
+			<div class="box-element mt-1">
+				<strong>{{product.name}}</strong>
+                <b class="text-muted" style="float: right">${{product.price}}</b>
 
-<div class="productitem container">
-<a href="#" onclick="productDetails('{{ product.slug }}', '{{ product.name }}', '{{ product.price }}', {{ product.count }})">{{ product.name }}</a>
-</div>
-
-{% endfor %}
-</div>
-
-<div id="product_popup" class="panel panel-default">
-	      	<div class="panel-body">
-		<div id="product_slug"></div>
-		<div id="product_name"></div>
-		<div id="product_price"></div>
+                <hr class="mt-2 mb-3">
+                <a class="btn btn-info" href="#" onclick="productDetails('{{ product.slug }}', '{{ product.name }}', '{{ product.price }}', {{ product.count }})">Details</a>
+                <button class="btn btn-outline-success">Add to Basket</button>
+			</div>
 		</div>
-</div>
+		{% endfor %}
+	</div>
 
+    <!-- FIXME make this look nice and also hide everything other-->
+    <div id="product_popup" class="panel panel-default">
+        <div class="panel-body">
+            <div id="product_slug"></div>
+            <div id="product_name"></div>
+            <div id="product_price"></div>
+        </div>
+    </div>
 
 {% endblock content %}
