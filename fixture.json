@@ -1,0 +1,147 @@
+[
+  {
+    "model": "user_mgmt.userprofile",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$216000$LQd92O1vYEL8$ghs0SndevmnEge0f3bYIaTREKMTXAIqXHLrllDuw9ec=",
+      "last_login": "2020-08-29T22:38:25.107Z",
+      "is_superuser": true,
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2020-08-27T09:43:57.930Z",
+      "username": "y@y.yy",
+      "first_name": "y",
+      "last_name": "y",
+      "enabled": true,
+      "datetime_joined": "2020-08-27T09:43:57.930Z",
+      "activation_token": "0",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "user_mgmt.userprofile",
+    "pk": 3,
+    "fields": {
+      "password": "!6T2HspGheEnVge5g4jKpKLtc472q0R2xHjpXHAMQ",
+      "last_login": "2020-08-28T23:24:29.501Z",
+      "is_superuser": false,
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2020-08-27T09:33:41.319Z",
+      "username": "sonnet.joshua@gmail.com",
+      "first_name": "Joshua Michael",
+      "last_name": "Sonnet",
+      "enabled": true,
+      "datetime_joined": "2020-08-27T09:33:41.319Z",
+      "activation_token": "0",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "user_mgmt.userprofile",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$216000$LRjs8hB2aG4Y$XI+bMX5XxuLmiY24BXeGQDAtDwQwOLVv93mxuJklhYQ=",
+      "last_login": "2020-08-28T23:13:14Z",
+      "is_superuser": false,
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2020-08-28T23:22:36.603Z",
+      "username": "abc@de.fg",
+      "first_name": "avd",
+      "last_name": "dfe",
+      "enabled": true,
+      "datetime_joined": "2020-08-28T23:22:36.603Z",
+      "activation_token": "P6AUOwvbpS5GhcsWBYpHQ0IOAHTMzD4c",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "user_mgmt.pwresettoken",
+    "pk": 2,
+    "fields": {
+      "username": 1,
+      "token": "123"
+    }
+  },
+  {
+    "model": "shop_mgmt.partner",
+    "pk": 1,
+    "fields": {
+      "name": "Tester",
+      "web_site": "http://localhost:8000/shop/tester-shop/",
+      "token": "abc"
+    }
+  },
+  {
+    "model": "shop_mgmt.partner",
+    "pk": 2,
+    "fields": {
+      "name": "Name again",
+      "web_site": "http://unknown.cc",
+      "token": "wubwubwub"
+    }
+  },
+  {
+    "model": "shop_mgmt.product",
+    "pk": 1,
+    "fields": {
+      "name": "rave cave",
+      "description": "the best rave cave besides at Giga4",
+      "slug": "rave-cave",
+      "price": "1337.420",
+      "special_price": "1337.410",
+      "count": 42,
+      "image": "http://localhost",
+      "seller": "p-abc"
+    }
+  },
+  {
+    "model": "shop_mgmt.product",
+    "pk": 3,
+    "fields": {
+      "name": "techno ball",
+      "description": "disco shit everyone likes",
+      "slug": "techno-ball",
+      "price": "123.450",
+      "special_price": null,
+      "count": 2,
+      "image": null,
+      "seller": "0"
+    }
+  },
+  {
+    "model": "shop_mgmt.product",
+    "pk": 4,
+    "fields": {
+      "name": "prankster",
+      "description": "Sub to the floor",
+      "slug": "prankster",
+      "price": "1009.320",
+      "special_price": null,
+      "count": 92,
+      "image": null,
+      "seller": "0"
+    }
+  },
+  {
+    "model": "shop_mgmt.product",
+    "pk": 5,
+    "fields": {
+      "name": "the hood of sound",
+      "description": "the design gets over you",
+      "slug": "the-hood-of-sound",
+      "price": "56.780",
+      "special_price": null,
+      "count": 34,
+      "image": null,
+      "seller": "0"
+    }
+  }
+]
