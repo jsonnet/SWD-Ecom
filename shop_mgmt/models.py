@@ -26,7 +26,7 @@ class Product(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=300)
-    slug = models.SlugField(blank=True)
+    slug = models.SlugField(blank=True, unique=True)
     price = models.DecimalField(decimal_places=3, max_digits=8)
     special_price = models.DecimalField(decimal_places=3, max_digits=8, null=True, blank=True)
     count = models.IntegerField()
@@ -36,6 +36,7 @@ class Product(models.Model):
     REQUIRED_FIELDS = ['name', 'description', 'price', 'count']
 
     def save(self, *args, **kwargs):
+        # TODO maybe make slug be uniquely created by appending pk?
         # slug auto-gen'd by name
         self.slug = slugify(self.name)
 
