@@ -58,7 +58,7 @@ def product_list(request):
     return HttpResponse(dtt, content_type="application/json")
 
 
-@csrf_exempt
+@csrf_exempt  # FIXME remove this
 @require_http_methods(["GET", "DELETE"])
 def product_details(request, product_id):
     # check if authenticated
@@ -98,7 +98,7 @@ def product_details(request, product_id):
 
 
 # TODO check if everything here is correct
-@csrf_exempt
+@csrf_exempt  # FIXME remove this
 @require_POST
 def product_create(request):
     # check if authenticated
@@ -108,14 +108,20 @@ def product_create(request):
     # get bearer token
     _, token = is_authenticated(request)
 
-    print(request.POST)
+    if request.content_type != 'application/json':
+        return HttpResponse("Please use json request", status=400)
 
-    name = request.POST.get('name')
-    desc = request.POST.get('description')
-    price = request.POST.get('price')
-    sprice = request.POST.get('special_price', '-1')
-    count = request.POST.get('count')
-    image = request.POST.get('image', '')
+    print(request.body)
+    print(request.content_type)
+
+    params = json.loads(request.body.decode('utf-8'))
+
+    name = params.get('name')
+    desc = params.get('description')
+    price = params.get('price')
+    sprice = params.get('special_price', '-1')
+    count = params.get('count')
+    image = params.get('image', '')
 
     product = Product(name=name, description=desc, price=price, special_price=sprice, count=count, image=image,
                       seller=f'p-{token}')
@@ -129,5 +135,6 @@ def product_create(request):
     #  is only used by partners so seller always p-<id> s.t. we could use the token to identify
     #  on semantic error 422 or 400
     # curl http://localhost:8000/api/products/create -H "Authorization: Bearer abc" -H "Content-Type: application/x-www-form-urlencoded" -X POST --data 'name=test&desc=more'
+    # curl http://localhost:8000/api/products/create -H "Authorization: Bearer abc" -H "Content-Type: application/json" -X POST --data '{"name":"test3","description":"foo", "price":"123.45", "count":"1"}'
 
     return HttpResponse("Product created \n", status=201)
