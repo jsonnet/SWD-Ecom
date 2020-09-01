@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block headerText %}<h1>Your Basket</h1>{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box-element">
+                {# FIXME HACK change table to container #}
+                <table class="table">
+                    <tr>
+                        <th>Total: <strong>42€</strong> (<strong>5</strong>  Items) </th> {# TODO needs to move down #}
+                        <th>
+                            <a style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' 0 %}">Checkout</a>
+                            {# FIXME add order id #}
+                        </th>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="box-element mt-3 p-2">
+                <div class="basket-row mb-2 pb-2">
+                    <div style="flex:1"></div>
+                    <div style="flex:2"><strong>Item</strong></div>
+                    <div style="flex:1"><strong>Quantity</strong></div>
+                    <div style="flex:1"><strong>Price</strong></div>
+                </div>
+                {#% FIXME for products in order ??? %#}
+                <div class="basket-row mb-2 pb-2">
+                    <div style="flex:1"><img style="width: 100px;"
+                                             src="https://images-eu.ssl-images-amazon.com/images/I/51YLsREcAaL.jpg">
+                    </div>
+                    <div style="flex:2"><p>Name of the product</p></div>
+                    <div style="flex:1">
+                        <p class="d-inline-block">123</p>
+                        <div class="d-inline-block pl-3">
+                            <img class="basket-arrow"
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Red_Arrow_Down.svg/768px-Red_Arrow_Down.svg.png">
+                        </div>
+                    </div>
+                    <div style="flex:1"><p>Cost €</p></div>
+                </div>
+                {#% endfor %#}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

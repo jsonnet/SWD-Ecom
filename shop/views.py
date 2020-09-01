@@ -11,14 +11,10 @@ def product_list(request):
 
 
 def basket(request, order_id):
-    # get all products from shop and requesting partner
-    products = Product.objects.all()
 
-    return render(request, 'product_list.html', {'products': products})
+    return render(request, 'basket.html', None)
 
 
-def product_details(request, order_id):
-    # get all products from shop and requesting partner
-    products = Product.objects.all()
+def checkout(request, order_id):
 
-    return render(request, 'product_list.html', {'products': products})
+    return render(request, 'checkout.html', None)

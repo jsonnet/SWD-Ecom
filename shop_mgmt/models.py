@@ -39,7 +39,6 @@ class Product(models.Model):
         # TODO maybe make slug be uniquely created by appending pk?
         # slug auto-gen'd by name
         self.slug = slugify(self.name)
-        super().save()
 
         # just set to normal price
         if self.special_price == -1:

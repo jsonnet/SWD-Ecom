@@ -4,6 +4,6 @@ from shop import views
 
 urlpatterns = [
     path('products/list', views.product_list, name='product_list'), 
-    path('basket/{str:order_id}', views.basket),  
-    path('checkout/{str:order_id}', views.product_details)
+    path('products/basket/<str:order_id>', views.basket, name='basket'),
+    path('checkout/<str:order_id>', views.checkout, name='checkout')
 ]
