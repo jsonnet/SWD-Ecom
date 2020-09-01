@@ -1,20 +1,17 @@
 import json
 
 from django.core import serializers
+from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 
-# FIXME
-#  check for proper HTTP response codes on error
-#  require decorators already throw 405 on error
 from shop_mgmt.models import Partner, Product
 
 
+# check Authorization: Bearer <token> with all stored in DB for each partner
 def is_authenticated(request):
-    # check Authorization: Bearer <token> with all stored in DB for each partner
-
     # check if Authorization header is present
     if 'Authorization' not in request.headers.keys():
         return False
@@ -58,7 +55,6 @@ def product_list(request):
     return HttpResponse(dtt, content_type="application/json")
 
 
-@csrf_exempt
 @require_http_methods(["GET", "DELETE"])
 def product_details(request, product_id):
     # check if authenticated
@@ -97,8 +93,7 @@ def product_details(request, product_id):
     return HttpResponse(status=404)
 
 
-# TODO check if everything here is correct
-@csrf_exempt
+# curl http://localhost:8000/api/products/create -H "Authorization: Bearer abc" -H "Content-Type: application/json" -X POST --data '{"name":"test3","description":"foo", "price":"123.45", "count":"1"}'
 @require_POST
 def product_create(request):
     # check if authenticated
@@ -108,26 +103,28 @@ def product_create(request):
     # get bearer token
     _, token = is_authenticated(request)
 
-    print(request.POST)
+    # Check for json instead of x-www-form
+    if request.content_type != 'application/json':
+        return HttpResponse("Please use json request", status=400)
 
-    name = request.POST.get('name')
-    desc = request.POST.get('description')
-    price = request.POST.get('price')
-    sprice = request.POST.get('special_price', '-1')
-    count = request.POST.get('count')
-    image = request.POST.get('image', '')
+    params = json.loads(request.body.decode('utf-8'))
+    name = params.get('name')
+    desc = params.get('description')
+    price = params.get('price')
+    sprice = params.get('special_price', '-1')
+    count = params.get('count')
+    image = params.get('image', '')
 
+    # Create product
     product = Product(name=name, description=desc, price=price, special_price=sprice, count=count, image=image,
                       seller=f'p-{token}')
     try:
         product.save()
+    except IntegrityError:
+        return HttpResponse('Product is already present or you did something weird\n', status=409)
+    except ValueError:
+        return HttpResponse('Syntax error, wrong type got assigned or non at all\n', status=422)
     except:
-        return HttpResponse('Syntax error when creating a product \n', status=422)
-
-    # TODO name, description, price, special_price (?), count, image, seller (? - or from access token?)
-    #  takes these from the request#body and create a new object in DB (just like with users)
-    #  is only used by partners so seller always p-<id> s.t. we could use the token to identify
-    #  on semantic error 422 or 400
-    # curl http://localhost:8000/api/products/create -H "Authorization: Bearer abc" -H "Content-Type: application/x-www-form-urlencoded" -X POST --data 'name=test&desc=more'
+        return HttpResponse('Syntax error when creating a product\n', status=422)
 
     return HttpResponse("Product created \n", status=201)

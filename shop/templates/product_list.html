@@ -20,6 +20,8 @@
             }
         }
     </script>
+
+{% include "basket.js" %}
 {% endblock %}
 {% block content %}
 
@@ -33,7 +35,7 @@
 
                 <hr class="mt-2 mb-3">
                 <a class="btn btn-info" href="#" onclick="productDetails('{{ product.slug }}', '{{ product.name }}', '{{ product.price }}', {{ product.count }})">Details</a>
-                <button class="btn btn-outline-success">Add to Basket</button>
+                <button onclick="addbasket('{{ product.slug }}')" class="btn btn-outline-success">Add to Basket</button>
 			</div>
 		</div>
 		{% endfor %}
