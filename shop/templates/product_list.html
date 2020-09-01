@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{%load static %}
 {% block footer %}
     <script>
         function productDetails(product_id, product_name, product_price, product_count) {
@@ -21,7 +22,7 @@
         }
     </script>
 
-{% include "basket.js" %}
+<script href="{% static "js/basket.js" %}"></script>
 {% endblock %}
 {% block content %}
 
