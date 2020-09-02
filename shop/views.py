@@ -44,8 +44,20 @@ def basket(request, order_id):
                 pass
         except Order.DoesNotExist:
             pass
-    return render(request, 'basket.html', {'items': items, 'item_total': total_count})
+    return render(request, 'basket.html', {'items': items, 'item_total': total_count, 'order_id':order_id})
 
+def basket_default(request):
+    
+    pk_x = -1
+    if request.user.is_authenticated:
+        try:
+            order = Order.objects.get(customer_id=request.user, placed=False)
+            pk_x = order.pk_x
+        except Order.DoesNotExist:
+            pass
+
+    return basket(request, pk_x)
+    pass
 
 def checkout(request, order_id):
     return render(request, 'checkout.html', None)
@@ -109,11 +121,11 @@ def remove_basket(request, product_id):
     return HttpResponse('done', content_type="text/plain")
 
 
-def basket_total(request):
+def basket_total(request, order_id):
     total = 0.0
     if request.user.is_authenticated:
         try:
-            order = Order.objects.get(customer_id=request.user, placed=False)
+            order = Order.objects.get(customer_id=request.user, pk_x=order_id)
             try:
                 cartitems = CartItem.objects.filter(order_id=order)
 
@@ -134,3 +146,15 @@ def basket_total(request):
             pass
 
     return HttpResponse(round(total, 2), content_type="text/plain")
+
+def basket_total_default(request):
+
+    order_id = -1
+    if request.user.is_authenticated:
+        try:
+            order = Order.objects.get(customer_id=request.user, placed=False)
+            order_id = order.pk_x
+        except Order.DoesNotExist:
+            pass
+
+    return basket_total(request, order_id) 

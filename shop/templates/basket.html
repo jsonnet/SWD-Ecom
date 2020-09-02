@@ -2,8 +2,9 @@
 {% load static %}
 {# TODO really in footer?? #}
 {% block footer %}
-    <script type="text/javascript" src="{% static "js/basket.js" %}"></script>
-    <script type="text/javascript">basketTotal("baskettotal2")</script>
+    <script type="text/javascript">
+    basketTotal("baskettotal2", {{ order_id }})
+    </script>
 {% endblock %}
 
 {% block headerText %}<h1>Your Basket</h1>{% endblock %}

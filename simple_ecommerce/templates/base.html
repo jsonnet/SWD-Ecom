@@ -45,7 +45,7 @@
                 <a href="{% url 'login' %}">Login</a>
                 <a href="{% url 'registration' %}">Register</a>
             {% endif %}
-            <a class="text-lg-right" style="float:right" href="{% url 'basket' 0 %}">Basket ICON <span id="baskettotal">0</span>$</a>
+            <a class="text-lg-right" style="float:right" href="{% url 'basket-default' %}">Basket ICON <span id="baskettotal">0</span>$</a>
         </div>
     </div>
 </nav>
@@ -90,6 +90,7 @@
 
 </div>
 
+<script type="text/javascript" src="{% static "js/basket.js" %}"></script>
 {% block footer %}
 {% endblock %}
 

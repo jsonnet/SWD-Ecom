@@ -8,7 +8,7 @@ function addbasket(product_id, product_price) {
                 window.location.href = '/accounts/login/?next=/shop/add-basket/' + product_id;
             } else {
     		//update basket
-    		basketTotal('baskettotal')
+    		basketTotal('baskettotal', -1)
             }
         }
     }
@@ -34,7 +34,7 @@ function removeBasket(product_id){
     xhr.send()
 }
 
-function basketTotal(dom_id) {
+function basketTotal(dom_id, order_id) {
 	
     var xhr = new XMLHttpRequest()
 
@@ -43,17 +43,21 @@ function basketTotal(dom_id) {
 
 	    //update total amount
 	    amount = this.responseText
-
+	    
 	    document.getElementById(dom_id).textContent = amount
 
         }
     }
 
-    xhr.open("GET", "/shop/basket-total")
+    if (order_id == -1) {
+    	xhr.open("GET", "/shop/basket-total/")
+    } else{
+    	xhr.open("GET", "/shop/basket-total/"+order_id)
+    }
     xhr.send()
    
 
 }
 
 //TODO maybe put in some onload function
-basketTotal('baskettotal')
+basketTotal('baskettotal', -1)
