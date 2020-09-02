@@ -1,54 +1,66 @@
 {% extends "base.html" %}
-{%load static %}
+{% load static %}
 {% block footer %}
     <script>
-        function productDetails(product_id, product_name, product_price, product_count) {
-            var details = {slug: product_id, name: product_name, price: product_price, count: product_count}
-            var details_json = JSON.stringify(details)
-            let w = window.open('/shop/products/list#' + details_json)
-        }
-
+        // open collapse when designated in hash
         window.onload = function () {
-            if (location.hash) {
-
-                var parsed = JSON.parse(decodeURIComponent(location.hash.substr(1)));
-
-                //add slug, name and price
-                document.getElementById('product_slug').textContent = "Slug:" + parsed.slug;
-                document.getElementById('product_name').textContent = "Name:" + parsed.name;
-                document.getElementById('product_price').textContent = "Price:" + parsed.price;
-                document.getElementById('product_list').style.display = "none";
-            }
+            if (location.hash)
+                $('#product_details-' + location.hash.substr(1)).collapse()
         }
+
+        // Only open one collapse at a time
+        $('button').click(function (e) {
+            $('.collapse').collapse('hide');
+        });
     </script>
 
-<script type="text/javascript" src="{% static "js/basket.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/basket.js" %}"></script>
 {% endblock %}
 {% block content %}
 
-    <div class="row">
-		{% for product in products %}
-		<div class="col-lg-4 mb-4 mt-1">
-			<img class="img-thumbnail" src="{{product.image}}">
-			<div class="box-element mt-1 p-2">
-				<strong>{{product.name}}</strong>
-                <b class="text-muted" style="float: right">${{product.price}}</b>
 
-                <hr class="mt-2 mb-3">
-                <button class="btn btn-info" onclick="productDetails('{{ product.slug }}', '{{ product.name }}', '{{ product.price }}', {{ product.count }})">Details</button>
-                <button onclick="addbasket('{{ product.slug }}', {{ product.price }})" class="btn btn-outline-success">Add to Basket</button>
-			</div>
-		</div>
-		{% endfor %}
-	</div>
+    <div class="row" id="productGroup">
+        <!--<div class="card container-fluid text-white bg-secondary my-5 py-4 text-center">
+            <div class="collapse" id="product_details">
+                <div class="card card-body">
+                    <p class="text-white m-0">
+                    <div>Image</div>
+                    <div>Name</div>
+                    <div>Description</div>
+                    <div>Price</div>
+                    <div>Count</div>
+                    </p>
+                </div>
+            </div>
+        </div>-->
+        {% for product in products %}
+            <div class="col-lg-4 mb-4 mt-1">
+                <img class="img-thumbnail" src="{{ product.image }}">
+                <div class="box-element mt-1 p-2">
+                    <strong>{{ product.name }}</strong>
+                    <b class="text-muted" style="float: right">${{ product.price }}</b>
 
-    <!-- FIXME make this look nice and also hide everything other-->
-    <div id="product_popup" class="panel panel-default">
-        <div class="panel-body">
-            <div id="product_slug"></div>
-            <div id="product_name"></div>
-            <div id="product_price"></div>
-        </div>
+                    <div class="collapse" id="product_details-{{ product.slug }}">
+                        <div class="card card-body">
+                            <p class="text-white">
+                            <div>{{ product.description }}</div>
+                            <hr>
+                            <div>Currently available: {{ product.count }}</div>
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr class="mt-2 mb-3">
+                    <button data-toggle="collapse" data-parent="#productGroup"
+                            data-target="#product_details-{{ product.slug }}"
+                            aria-expanded="false" class="btn btn-info">
+                        Details
+                    </button>
+                    <button onclick="addbasket('{{ product.slug }}')" class="btn btn-outline-success">Add to Basket
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 
 {% endblock content %}
