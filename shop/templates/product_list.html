@@ -52,7 +52,7 @@
 
                     {# Buttons #}
                     <hr class="mt-2 mb-3">
-                    <button data-toggle="collapse" data-parent="#productGroup"
+                    <button onclick="location.hash = '{{ product.slug }}';" data-toggle="collapse" data-parent="#productGroup"
                             data-target="#product_details-{{ product.slug }}"
                             aria-expanded="false" class="btn btn-info">
                         Details

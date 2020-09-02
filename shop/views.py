@@ -11,6 +11,9 @@ def product_list(request):
     return render(request, 'product_list.html', {'products': products})
 
 
+# TODO display based on order_id and customer
+#  he can view all his already placed baskets
+#  checkout button should then be disabled!
 def basket(request, order_id):
     items = []
     if request.user.is_authenticated:

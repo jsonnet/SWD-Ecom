@@ -47,6 +47,7 @@
                         {% endif %}
                         <div style="flex:2"><p>{{ item.name }}</p></div>
                         <div style="flex:1">
+                            {# TODO add if with quantity > count display red text #}
                             <p class="d-inline-block">{{ item.quantity }}</p>
                             <div class="d-inline-block pl-3">
                                 <img onclick="removeBasket('{{ item.slug }}')" class="basket-arrow"
