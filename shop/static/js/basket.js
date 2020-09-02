@@ -5,7 +5,7 @@ function addbasket(product_id, product_price) {
 	xhr.onreadystatechange = function() {
 	if (this.readyState === this.DONE) {
 	           if (this.responseText == "login") {
-		   	window.location.href = '/accounts/login/?next=/shop/add-basket/'+product_id;
+		   	window.location.href = '/accounts/login-redirect?next=/shop/add-basket/'+product_id+'?redirect';
 		   } else {
 		   	console.log(this.responseText)
 		   }
