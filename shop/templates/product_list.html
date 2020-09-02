@@ -58,10 +58,10 @@
                         Details
                     </button>
                     {% if product.count != 0 %}
-                        <button onclick="addbasket('{{ product.slug }}')" class="btn btn-outline-success">Add to Basket
+                        <button onclick="addbasket('{{ product.slug }}', {{ product.price }})" class="btn btn-outline-success">Add to Basket
                         </button>
                     {% else %}
-                        <button onclick="addbasket('{{ product.slug }}')" data-toggle="tooltip" data-placement="bottom"
+                        <button onclick="addbasket('{{ product.slug }}', {{ product.price }})" data-toggle="tooltip" data-placement="bottom"
                                 title="Product currently unavailable" class="btn btn-outline-danger" disabled>Add
                             to Basket
                         </button>
