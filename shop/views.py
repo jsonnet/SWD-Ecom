@@ -13,7 +13,29 @@ def product_list(request):
 
 def basket(request, order_id):
 
-    return render(request, 'basket.html', None)
+    items = []
+    if request.user.is_authenticated:
+        try:
+            order = Order.objects.get(customer_id=request.user, placed=False) 
+            try:
+                #iterate all items from that order
+                cartitems = CartItem.objects.filter(order_id=order)
+
+                for cartitem in cartitems:
+                    basketitem = dict() 
+                    product = Product.objects.get(slug=cartitem.product_id) 
+
+                    #add to separate structure that combines everything
+                    basketitem['price'] = product.price
+                    basketitem['name'] = product.name
+                    basketitem['quantity'] = cartitem.quantity
+                    items.append(basketitem)
+
+            except CartItem.DoesNotExist:
+                pass
+        except Order.DoesNotExist:
+            pass
+    return render(request, 'basket.html', {'items':items})
 
 
 def checkout(request, order_id):
@@ -23,12 +45,22 @@ def checkout(request, order_id):
 def add_basket(request, product_id):
     
     if request.user.is_authenticated:
-       orders = Card.objects.get(customer_id=request.user, data_placed=False) 
-       if len(orders) == 1:
-        order = orders[0]
+        order = Order()
+
+       #create new order if not exists
+        try:
+            order = Order.objects.get(customer_id=request.user, placed=False) 
+        except Order.DoesNotExist:
+            order.customer_id = request.user
+            order.save()
+        
         
         #check if item exists already
-        item, _ = CartItem.objects.get_or_create(product_id=product_id, order_id=order) 
+        item = CartItem()
+        try: 
+            item = CartItem.objects.get(product_id=product_id, order_id=order) 
+        except CartItem.DoesNotExist:
+            item.quantity = 0 
 
         item.product_id = product_id
         item.quantity = item.quantity+1

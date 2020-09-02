@@ -23,22 +23,22 @@
                     <div style="flex:1"><strong>Quantity</strong></div>
                     <div style="flex:1"><strong>Price</strong></div>
                 </div>
-                {#% FIXME for products in order ??? %#}
+		{% for item in items %}
                 <div class="basket-row mb-2 pb-2">
                     <div style="flex:1"><img style="width: 100px;"
                                              src="https://images-eu.ssl-images-amazon.com/images/I/51YLsREcAaL.jpg">
                     </div>
-                    <div style="flex:2"><p>Name of the product</p></div>
+                    <div style="flex:2"><p>{{ item.name }}</p></div>
                     <div style="flex:1">
-                        <p class="d-inline-block">123</p>
+                        <p class="d-inline-block">{{ item.quantity }}</p>
                         <div class="d-inline-block pl-3">
                             <img class="basket-arrow"
                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Red_Arrow_Down.svg/768px-Red_Arrow_Down.svg.png">
                         </div>
                     </div>
-                    <div style="flex:1"><p>Cost €</p></div>
+                    <div style="flex:1"><p>{{ item.price }} $</p></div>
                 </div>
-                {#% endfor %#}
+                {% endfor %}
             </div>
         </div>
     </div>

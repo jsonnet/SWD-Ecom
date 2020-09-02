@@ -6,6 +6,8 @@ function addbasket(product_id, product_price) {
 	if (this.readyState === this.DONE) {
 	           if (this.responseText == "login") {
 		   	window.location.href = '/accounts/login/?next=/shop/add-basket/'+product_id;
+		   } else {
+		   	console.log(this.responseText)
 		   }
 	}
 	}

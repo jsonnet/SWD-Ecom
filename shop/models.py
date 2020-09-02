@@ -25,9 +25,10 @@ class Order(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
     customer_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     placed = models.BooleanField(default=False)
-    date_placed = models.DateTimeField()
-    shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
+    date_placed = models.DateTimeField(auto_now_add=True)
+    #shipping and payment can be null initially
+    shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, null=True)
 
 
 class CartItem(models.Model):
