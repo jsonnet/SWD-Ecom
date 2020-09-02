@@ -1,5 +1,6 @@
-from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import render
+
 from shop.models import *
 from shop_mgmt.models import *
 
@@ -42,7 +43,7 @@ def basket(request, order_id):
                 pass
         except Order.DoesNotExist:
             pass
-    return render(request, 'basket.html', {'items': items, 'item_total':total_count})
+    return render(request, 'basket.html', {'items': items, 'item_total': total_count})
 
 
 def checkout(request, order_id):
@@ -78,8 +79,8 @@ def add_basket(request, product_id):
 
     return HttpResponse('loginn', content_type="text/plain")
 
+
 def basket_total(request):
-    
     total = 0.0
     if request.user.is_authenticated:
         try:
@@ -91,20 +92,16 @@ def basket_total(request):
                     try:
 
                         product = Product.objects.get(slug=cartitem.product_id)
-                        total += float(product.price)*float(cartitem.quantity)
+                        total += float(product.price) * float(cartitem.quantity)
 
                     except CartItem.DoesNotExist:
                         print("hi")
                         pass
 
-
             except CartItem.DoesNotExist:
                 pass
-
-
 
         except Order.DoesNotExist:
             pass
 
-    return HttpResponse(total, content_type="text/plain")
-
+    return HttpResponse(round(total, 2), content_type="text/plain")
