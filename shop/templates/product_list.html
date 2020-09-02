@@ -36,7 +36,7 @@
 
                 <hr class="mt-2 mb-3">
                 <button class="btn btn-info" onclick="productDetails('{{ product.slug }}', '{{ product.name }}', '{{ product.price }}', {{ product.count }})">Details</button>
-                <button onclick="addbasket('{{ product.slug }}')" class="btn btn-outline-success">Add to Basket</button>
+                <button onclick="addbasket('{{ product.slug }}', {{ product.price }})" class="btn btn-outline-success">Add to Basket</button>
 			</div>
 		</div>
 		{% endfor %}
