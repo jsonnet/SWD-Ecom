@@ -22,8 +22,7 @@ def checkout(request, order_id):
 
 def add_basket(request, product_id):
     
-    print("hi")
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
        orders = Card.objects.get(customer_id=request.user, data_placed=False) 
        if len(orders) == 1:
         order = orders[0]
