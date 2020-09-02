@@ -1,5 +1,6 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from shop.models import *
 from shop_mgmt.models import *
@@ -15,6 +16,7 @@ def product_list(request):
 # TODO display based on order_id and customer
 #  he can view all his already placed baskets
 #  checkout button should then be disabled!
+@login_required
 def basket(request, order_id):
     items = []
     total_count = 0
@@ -44,10 +46,15 @@ def basket(request, order_id):
                 pass
         except Order.DoesNotExist:
             pass
-    return render(request, 'basket.html', {'items': items, 'item_total': total_count, 'order_id':order_id})
+    return render(request, 'basket.html', {'items': items, 'item_total': total_count, 'order_id': order_id})
+
+
+@login_required
+def checkout(request, order_id):
+    return render(request, 'checkout.html', None)
+
 
 def basket_default(request):
-    
     pk_x = -1
     if request.user.is_authenticated:
         try:
@@ -58,9 +65,6 @@ def basket_default(request):
 
     return basket(request, pk_x)
     pass
-
-def checkout(request, order_id):
-    return render(request, 'checkout.html', None)
 
 
 def add_basket(request, product_id):
@@ -86,11 +90,10 @@ def add_basket(request, product_id):
         item.order_id = order
 
         item.save()
-        return HttpResponse('success', content_type="text/plain")
+        return redirect('basket-default')
     else:
         return HttpResponse('login', content_type="text/plain")
 
-    return HttpResponse('loginn', content_type="text/plain")
 
 def remove_basket(request, product_id):
     if request.user.is_authenticated:
@@ -109,7 +112,7 @@ def remove_basket(request, product_id):
             item = CartItem.objects.get(product_id=product_id, order_id=order)
             item.quantity = item.quantity - 1
             item.order_id = order
-            print (item.quantity)
+            print(item.quantity)
             if item.quantity <= 0:
                 item.delete()
             else:
@@ -147,8 +150,8 @@ def basket_total(request, order_id):
 
     return HttpResponse(round(total, 2), content_type="text/plain")
 
-def basket_total_default(request):
 
+def basket_total_default(request):
     order_id = -1
     if request.user.is_authenticated:
         try:
@@ -157,4 +160,4 @@ def basket_total_default(request):
         except Order.DoesNotExist:
             pass
 
-    return basket_total(request, order_id) 
+    return basket_total(request, order_id)
