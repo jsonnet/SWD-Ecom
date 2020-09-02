@@ -16,6 +16,7 @@ def product_list(request):
 #  checkout button should then be disabled!
 def basket(request, order_id):
     items = []
+    total_count = 0
     if request.user.is_authenticated:
         try:
             order = Order.objects.get(customer_id=request.user, placed=False)
@@ -35,12 +36,13 @@ def basket(request, order_id):
                     basketitem['slug'] = product.slug
 
                     items.append(basketitem)
+                    total_count += cartitem.quantity
 
             except CartItem.DoesNotExist:
                 pass
         except Order.DoesNotExist:
             pass
-    return render(request, 'basket.html', {'items': items})
+    return render(request, 'basket.html', {'items': items, 'item_total':total_count})
 
 
 def checkout(request, order_id):
@@ -75,3 +77,34 @@ def add_basket(request, product_id):
         return HttpResponse('login', content_type="text/plain")
 
     return HttpResponse('loginn', content_type="text/plain")
+
+def basket_total(request):
+    
+    total = 0.0
+    if request.user.is_authenticated:
+        try:
+            order = Order.objects.get(customer_id=request.user, placed=False)
+            try:
+                cartitems = CartItem.objects.filter(order_id=order)
+
+                for cartitem in cartitems:
+                    try:
+
+                        product = Product.objects.get(slug=cartitem.product_id)
+                        total += float(product.price)*float(cartitem.quantity)
+
+                    except CartItem.DoesNotExist:
+                        print("hi")
+                        pass
+
+
+            except CartItem.DoesNotExist:
+                pass
+
+
+
+        except Order.DoesNotExist:
+            pass
+
+    return HttpResponse(total, content_type="text/plain")
+

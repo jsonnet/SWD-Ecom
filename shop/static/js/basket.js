@@ -7,7 +7,8 @@ function addbasket(product_id, product_price) {
             if (this.responseText === "login") {
                 window.location.href = '/accounts/login/?next=/shop/add-basket/' + product_id;
             } else {
-                console.log(this.responseText)
+    		//update basket
+    		basketTotal()
             }
         }
     }
@@ -15,17 +16,34 @@ function addbasket(product_id, product_price) {
     xhr.open("GET", "/shop/add-basket/" + product_id)
     xhr.send()
 
-    //FIXME
-    //update total amount
-    amount = document.getElementById('baskettotal').textContent
-    amount = parseInt(amount)
-    amount = amount || 0
 
-    amount += product_price
-    document.getElementById('baskettotal').textContent = amount
 }
 
 function removeBasket(product_id){
     //TODO implement
     console.log("This should remove " + product_id)
 }
+
+function basketTotal(dom_id) {
+	
+    var xhr = new XMLHttpRequest()
+
+    xhr.onreadystatechange = function () {
+        if (this.readyState === this.DONE) {
+
+	    //update total amount
+	    amount = this.responseText
+
+	    document.getElementById(dom_id).textContent = amount
+
+        }
+    }
+
+    xhr.open("GET", "/shop/basket-total")
+    xhr.send()
+   
+
+}
+
+//TODO maybe put in some onload function
+basketTotal('baskettotal')

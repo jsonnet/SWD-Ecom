@@ -3,6 +3,7 @@
 {# TODO really in footer?? #}
 {% block footer %}
     <script type="text/javascript" src="{% static "js/basket.js" %}"></script>
+    <script type="text/javascript">basketTotal("baskettotal2")</script>
 {% endblock %}
 
 {% block headerText %}<h1>Your Basket</h1>{% endblock %}
@@ -15,7 +16,7 @@
                 {# FIXME HACK change table to container #}
                 <table class="table">
                     <tr>
-                        <th>Total: <strong>42€</strong> (<strong>5</strong> Items)</th>
+                        <th>Total: <strong id='baskettotal2'>0</strong>$ (<strong>{{ item_total }}</strong> Items)</th>
                         {# TODO needs to move down #}
                         <th>
                             <a style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' 0 %}">Checkout</a>
