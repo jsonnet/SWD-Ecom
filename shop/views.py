@@ -20,7 +20,7 @@ def basket(request, order_id):
     total_count = 0
     if request.user.is_authenticated:
         try:
-            order = Order.objects.get(customer_id=request.user, placed=False)
+            order = Order.objects.get(customer_id=request.user, pk_x=order_id)
             try:
                 # iterate all items from that order
                 cartitems = CartItem.objects.filter(order_id=order)
