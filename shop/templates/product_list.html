@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{# TODO really in footer?? #}
 {% block footer %}
     <script>
         // open collapse when designated in hash
@@ -12,52 +13,59 @@
         $('button').click(function (e) {
             $('.collapse').collapse('hide');
         });
+
+        // Show tooltips (just for the red basket button)
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     </script>
 
     <script type="text/javascript" src="{% static "js/basket.js" %}"></script>
 {% endblock %}
 {% block content %}
 
-
     <div class="row" id="productGroup">
-        <!--<div class="card container-fluid text-white bg-secondary my-5 py-4 text-center">
-            <div class="collapse" id="product_details">
-                <div class="card card-body">
-                    <p class="text-white m-0">
-                    <div>Image</div>
-                    <div>Name</div>
-                    <div>Description</div>
-                    <div>Price</div>
-                    <div>Count</div>
-                    </p>
-                </div>
-            </div>
-        </div>-->
         {% for product in products %}
             <div class="col-lg-4 mb-4 mt-1">
-                <img class="img-thumbnail" src="{{ product.image }}">
-                <div class="box-element mt-1 p-2">
+                <img class="img-thumbnail box-shadow" src="{{ product.image }}">
+                <div class="box-shadow mt-1 p-2">
+
+                    {# Item name and price #}
                     <strong>{{ product.name }}</strong>
                     <b class="text-muted" style="float: right">${{ product.price }}</b>
 
+                    {# Custom popup (collapse) elememt with details #}
                     <div class="collapse" id="product_details-{{ product.slug }}">
                         <div class="card card-body">
                             <p class="text-white">
                             <div>{{ product.description }}</div>
                             <hr>
                             <div>Currently available: {{ product.count }}</div>
+                            {% if product.seller != "0" %}
+                                <small class="text-muted">Sold by {{ product.seller|slice:"2:" }}</small>
+                            {% else %}
+                                <small class="text-muted">Sold by Thin Air</small>
+                            {% endif %}
                             </p>
                         </div>
                     </div>
 
+                    {# Buttons #}
                     <hr class="mt-2 mb-3">
                     <button data-toggle="collapse" data-parent="#productGroup"
                             data-target="#product_details-{{ product.slug }}"
                             aria-expanded="false" class="btn btn-info">
                         Details
                     </button>
-                    <button onclick="addbasket('{{ product.slug }}')" class="btn btn-outline-success">Add to Basket
-                    </button>
+                    {% if product.count != 0 %}
+                        <button onclick="addbasket('{{ product.slug }}')" class="btn btn-outline-success">Add to Basket
+                        </button>
+                    {% else %}
+                        <button onclick="addbasket('{{ product.slug }}')" data-toggle="tooltip" data-placement="bottom"
+                                title="Product currently unavailable" class="btn btn-outline-danger" disabled>Add
+                            to Basket
+                        </button>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

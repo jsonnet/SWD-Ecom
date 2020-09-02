@@ -1,4 +1,4 @@
-/* The sidebar menu */
+/* The top menu bar */
 
 #login_bar {
     background-color: #343434;
@@ -13,6 +13,9 @@
     color: white;
 }
 
+
+/* The sidebar menu */
+
 .sidenav {
     height: 100%;
     width: 220px; /* width of sidebar */
@@ -24,8 +27,7 @@
     padding-top: 20px;
 }
 
-/* The navigation menu links */
-.sidenav a {
+.sidenav a { /* navigation menu href styling */
     padding: 6px 8px 6px 16px;
     text-decoration: none;
     font-size: 25px;
@@ -50,30 +52,31 @@
     flex-direction: row;
 }
 
+
 /*  Marketplace  */
 
 .main .img-thumbnail{
 	width: 100%;
 	height: 200px;
-    box-shadow:hsl(0, 0%, 60%) 0 0 8px;
 }
 
-.box-element{
+.box-shadow{  /* fancy boarder glow */
 	box-shadow:hsl(0, 0%, 60%) 0 0 8px;
 }
 
+
 /*  Basket  */
 
-.row {
+.row { /* stupid hack */
     width: 100%;
 }
 
 .row .basket-row{
 	display: flex;
-    border-bottom: 1px solid #ececec;
+    border-bottom: 1px solid rgba(0,0,0,.1);  /* standard hr color */
 }
 
-.basket-arrow{
+.basket-arrow{ /* small red arrow */
 	width: 12px;
 	cursor: pointer;
 	display: block;
