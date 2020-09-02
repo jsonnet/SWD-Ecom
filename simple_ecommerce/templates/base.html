@@ -43,6 +43,7 @@
                 <a href="{% url 'login' %}">Login</a>
                 <a href="{% url 'registration' %}">Register</a>
             {% endif %}
+            <a class="text-lg-right" style="float:right" href="{% url 'basket' 0 %}">Basket ICON</a>
         </div>
     </div>
 </nav>
@@ -73,8 +74,10 @@
             {% endif %}
         </div>
         <div class="col-9">
+            {% block headerText %}
             <h1 class="mt-2">Thin Air LTD E-Commerce</h1>
             <h3 class="text-muted"> the shop where you are going to be ripped of</h3>
+            {% endblock %}
             <hr class="mt-0 mb-4">
             <div class="container">
                 {% block content %}

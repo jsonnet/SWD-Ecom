@@ -15,7 +15,7 @@
 
 .sidenav {
     height: 100%;
-    width: 260px; /* width of sidebar */
+    width: 220px; /* width of sidebar */
     position: fixed; /* Fixed Sidebar */
     z-index: 1;
     left: 0;
@@ -41,7 +41,7 @@
 
 /* Style page content */
 .main {
-    margin-left: 160px; /* Same as the width of the sidebar */
+    margin-left: 120px; /* Same as the width of the sidebar */
     padding: 0px 10px;
 }
 
@@ -50,12 +50,31 @@
     flex-direction: row;
 }
 
-#product_list {
-	width: 50%;	
-}
+/*  Marketplace  */
 
 .main .img-thumbnail{
 	width: 100%;
 	height: 200px;
-    box-shadow: -2px -3px 5px -3px rgb(146, 146, 146);
+    box-shadow:hsl(0, 0%, 60%) 0 0 8px;
+}
+
+.box-element{
+	box-shadow:hsl(0, 0%, 60%) 0 0 8px;
+}
+
+/*  Basket  */
+
+.row {
+    width: 100%;
+}
+
+.row .basket-row{
+	display: flex;
+    border-bottom: 1px solid #ececec;
+}
+
+.basket-arrow{
+	width: 12px;
+	cursor: pointer;
+	display: block;
 }

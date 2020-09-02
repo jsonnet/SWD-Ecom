@@ -28,14 +28,14 @@
 
     <div class="row">
 		{% for product in products %}
-		<div class="col-lg-4 mt-5">
+		<div class="col-lg-4 mb-4 mt-1">
 			<img class="img-thumbnail" src="{{product.image}}">
-			<div class="box-element mt-1">
+			<div class="box-element mt-1 p-2">
 				<strong>{{product.name}}</strong>
                 <b class="text-muted" style="float: right">${{product.price}}</b>
 
                 <hr class="mt-2 mb-3">
-                <a class="btn btn-info" href="#" onclick="productDetails('{{ product.slug }}', '{{ product.name }}', '{{ product.price }}', {{ product.count }})">Details</a>
+                <button class="btn btn-info" onclick="productDetails('{{ product.slug }}', '{{ product.name }}', '{{ product.price }}', {{ product.count }})">Details</button>
                 <button onclick="addbasket('{{ product.slug }}')" class="btn btn-outline-success">Add to Basket</button>
 			</div>
 		</div>
