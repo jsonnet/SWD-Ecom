@@ -1,1 +1,56 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block headerText %}<h1>Confirm your Order</h1>{% endblock %}
+{% block content %}
+     <div class="row">
+		<div class="col-lg-6">
+			<div class="box-shadow p-2 mt-3" id="form-wrapper">
+				<form id="form">
+					<div id="shipping-info">
+						<p>Shipping Information:</p>
+						<hr>
+						<div class="form-field">
+							<input class="form-control" type="text" name="address" placeholder="Address..">
+						</div>
+                        <div class="form-field">
+							<input class="form-control" type="text" name="addinfo" placeholder="Additional info..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="city" placeholder="City..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="country" placeholder="Country..">
+						</div>
+					</div>
+
+					<hr>
+					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+				</form>
+			</div>
+		</div>
+
+		<div class="col-lg-6">
+			<div class="box-shadow p-2 mt-3">
+				<a  class="btn btn-outline-dark" href="{% url 'basket' 0 %}">&#x2190; Change Order</a>
+				<hr>
+				<h3>Order Summary</h3>
+				<hr>
+				{% for item in items %}
+				<div class="basket-row">
+					<div style="flex:2"><img class="row-image" src="{{item.image}}"></div>
+					<div style="flex:2"><p>{{item.name}}</p></div>
+					<div style="flex:1"><p>{{item.price|floatformat:2}}</p></div>
+					<div style="flex:1"><p>x{{item.quantity}}</p></div>
+				</div>
+				{% endfor %}
+				<h5>Total:   ${# TOTAL #}</h5>
+			</div>
+		</div>
+	</div>
+
+	{# js #}
+{% endblock content %}

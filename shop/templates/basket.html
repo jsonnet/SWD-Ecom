@@ -55,7 +55,7 @@
                                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Red_Arrow_Down.svg/768px-Red_Arrow_Down.svg.png">
                             </div>
                         </div>
-                        <div style="flex:1"><p>{{ item.price }} $</p></div>
+                        <div style="flex:1"><p>{{ item.price|floatformat:2 }} $</p></div>
                     </div>
                 {% endfor %}
             </div>
