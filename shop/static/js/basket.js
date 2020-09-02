@@ -8,7 +8,7 @@ function addbasket(product_id, product_price) {
                 window.location.href = '/accounts/login/?next=/shop/add-basket/' + product_id;
             } else {
     		//update basket
-    		basketTotal()
+    		basketTotal('baskettotal')
             }
         }
     }
