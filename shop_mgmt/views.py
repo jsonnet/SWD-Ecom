@@ -4,6 +4,7 @@ from django.core import serializers
 from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponse
+from django.utils.cache import add_never_cache_headers, patch_response_headers
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 
@@ -52,9 +53,12 @@ def product_list(request):
     dtt = serializers.serialize("json", dt, indent=2)
 
     # Dont want to use JsonResponse
-    return HttpResponse(dtt, content_type="application/json")
+    response = HttpResponse(dtt, content_type="application/json")
+    add_never_cache_headers(response)
+    return response
 
 
+@csrf_exempt
 @require_http_methods(["GET", "DELETE"])
 def product_details(request, product_id):
     # check if authenticated
@@ -75,7 +79,9 @@ def product_details(request, product_id):
         dtt = serializers.serialize("json", dt, indent=2)
 
         # Dont want to use JsonResponse
-        return HttpResponse(dtt, content_type="application/json")
+        response = HttpResponse(dtt, content_type="application/json")
+        add_never_cache_headers(response)
+        return response
 
     elif request.method == 'DELETE':
         # get all products from requesting partner
@@ -94,6 +100,7 @@ def product_details(request, product_id):
 
 
 # curl http://localhost:8000/api/products/create -H "Authorization: Bearer abc" -H "Content-Type: application/json" -X POST --data '{"name":"test3","description":"foo", "price":"123.45", "count":"1"}'
+@csrf_exempt
 @require_POST
 def product_create(request):
     # check if authenticated
