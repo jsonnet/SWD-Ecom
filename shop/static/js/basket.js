@@ -21,7 +21,17 @@ function addbasket(product_id, product_price) {
 
 function removeBasket(product_id){
     //TODO implement
-    console.log("This should remove " + product_id)
+    var xhr = new XMLHttpRequest()
+
+    xhr.onreadystatechange = function () {
+        if (this.readyState === this.DONE) {
+		
+		location.reload()
+        }
+    }
+
+    xhr.open("GET", "/shop/remove-basket/"+product_id)
+    xhr.send()
 }
 
 function basketTotal(dom_id) {

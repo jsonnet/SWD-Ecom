@@ -29,13 +29,14 @@ def basket(request, order_id):
                     product = Product.objects.get(slug=cartitem.product_id)
 
                     # add to separate structure that combines everything
-                    basketitem['price'] = product.price
-                    basketitem['name'] = product.name
-                    basketitem['image'] = product.image
-                    basketitem['quantity'] = cartitem.quantity
-                    basketitem['slug'] = product.slug
+                    if cartitem.quantity > 0:
+                        basketitem['price'] = product.price
+                        basketitem['name'] = product.name
+                        basketitem['image'] = product.image
+                        basketitem['quantity'] = cartitem.quantity
+                        basketitem['slug'] = product.slug
 
-                    items.append(basketitem)
+                        items.append(basketitem)
                     total_count += cartitem.quantity
 
             except CartItem.DoesNotExist:
@@ -77,6 +78,35 @@ def add_basket(request, product_id):
         return HttpResponse('login', content_type="text/plain")
 
     return HttpResponse('loginn', content_type="text/plain")
+
+def remove_basket(request, product_id):
+    if request.user.is_authenticated:
+        order = Order()
+
+        # create new order if not exists
+        try:
+            order = Order.objects.get(customer_id=request.user, placed=False)
+        except Order.DoesNotExist:
+            order.customer_id = request.user
+            order.save()
+
+        # check if item exists already
+        item = CartItem()
+        try:
+            item = CartItem.objects.get(product_id=product_id, order_id=order)
+            item.quantity = item.quantity - 1
+            item.order_id = order
+            print (item.quantity)
+            if item.quantity <= 0:
+                item.delete()
+            else:
+                item.save()
+
+        except CartItem.DoesNotExist:
+            pass
+
+    return HttpResponse('done', content_type="text/plain")
+
 
 def basket_total(request):
     
