@@ -2,23 +2,20 @@ from django.db import models
 from user_mgmt.models import UserProfile
 
 
-# P4
-# TODO discuss if Cascade is best option for deletion
-
 class Payment(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
-    amount = models.IntegerField()  # FIXME should be DecimalField
+    amount = models.DecimalField(decimal_places=3, max_digits=8)
     method = models.CharField(max_length=32)
 
 
 class Address(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
-    user = models.CharField(max_length=30)  # FIXME relation to userprofile
+    user = models.CharField(max_length=30)  # could change relation to userprofile
     street = models.CharField(max_length=64)
     city = models.CharField(max_length=64)
     zip_code = models.CharField(max_length=5)
     country = models.CharField(max_length=64)
-    additional_info = models.CharField(max_length=64)
+    additional_info = models.CharField(max_length=64, blank=True, null=True)
 
 
 class Order(models.Model):
@@ -33,6 +30,6 @@ class Order(models.Model):
 
 class CartItem(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
-    product_id = models.CharField(max_length=64)  # FIXME change to relation?
+    product_id = models.CharField(max_length=64)  # could change to relation?
     quantity = models.IntegerField()
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)

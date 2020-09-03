@@ -1,56 +1,136 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block footer %}
+    <script type="text/javascript">
+        basketTotal("baskettotal2", {{ order_id }})
+
+        {% if address %}
+            $(document).ready(function () {
+                $("#shipping-field").hide();
+                $("#shipping-text").show();
+
+                $("#checkout-btn").prop('disabled', false);
+            });
+        {% endif %}
+
+        $(document).ready(function () {
+            $("#address-btn").click(function (e) {
+                if ($("#address-field").val())
+                    $("#street-text").text($("#address-field").val());
+
+                if ($("#addinfo-field").val())
+                    $("#add-text").text($("#addinfo-field").val());
+
+                if ($("#city-field").val())
+                    $("#city-text").text($("#zipcode-field").val() + " " + $("#city-field").val());
+
+                if ($("#country-field").val())
+                    $("#country-text").text($("#country-field").val());
+
+
+                $("#shipping-field").toggle();
+                $("#shipping-text").toggle();
+
+                $("#checkout-btn").prop('disabled', !$("#checkout-btn").prop('disabled'));
+                e.preventDefault();
+            });
+
+            $("#checkout-btn").click(function (e) {
+                alert("yay")
+
+                e.preventDefault();
+            });
+        });
+
+    </script>
+{% endblock %}
+
 {% block headerText %}<h1>Confirm your Order</h1>{% endblock %}
 {% block content %}
-     <div class="row">
-		<div class="col-lg-6">
-			<div class="box-shadow p-2 mt-3" id="form-wrapper">
-				<form id="form">
-					<div id="shipping-info">
-						<p>Shipping Information:</p>
-						<hr>
-						<div class="form-field">
-							<input class="form-control" type="text" name="address" placeholder="Address..">
-						</div>
-                        <div class="form-field">
-							<input class="form-control" type="text" name="addinfo" placeholder="Additional info..">
-						</div>
-						<div class="form-field">
-							<input class="form-control" type="text" name="city" placeholder="City..">
-						</div>
-						<div class="form-field">
-							<input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
-						</div>
-						<div class="form-field">
-							<input class="form-control" type="text" name="country" placeholder="Country..">
-						</div>
-					</div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box-shadow p-2 mt-3" id="form-wrapper">
+                <form id="form">
+                    <div id="shipping-info">
+                        <p>Shipping Information:</p>
+                        <hr>
+                        <div id="shipping-field">  {# $("#shipping-field").hide(); and $("#shipping-field").show(); #}
+                            <div class="form-field">
+                                <input class="form-control" type="text" id="address-field" placeholder="Address..">
+                            </div>
+                            <div class="form-field mt-1">
+                                <input class="form-control" type="text" id="addinfo-field"
+                                       placeholder="Additional info..">
+                            </div>
+                            <div class="form-field mt-1">
+                                <input class="form-control" type="text" id="city-field" placeholder="City..">
+                            </div>
+                            <div class="form-field mt-1">
+                                <input class="form-control" type="text" id="zipcode-field" placeholder="Zip code..">
+                            </div>
+                            <div class="form-field mt-1">
+                                <input class="form-control" type="text" id="country-field" placeholder="Country..">
+                            </div>
+                        </div>
+                        <div id="shipping-text" style="display:none;">
+                            {# $("#name-text").text("newvalue") <-- textContent #}
+                            <p id="name-text">MAX {{ address.user }}</p>
+                            <p id="add-text">{% if address.additional_info %}{{ address.additional_info }}{% endif %}</p>
+                            <p id="street-text">{{ address.street }}</p>
+                            <p id="city-text">{{ address.zip_code }} {{ address.city }}</p>
+                            <p id="country-text">{{ address.country }}</p>
+                        </div>
+                        <button id="address-btn" class="btn btn-secondary btn-block mt-2">Change Address</button>
+                    </div>
+                    <div id="payment-info">
+                        <hr>
+                        <select class="custom-select" id="payment" required>
+                            <option disabled selected>Choose your payment option</option>
+                            <optgroup label="Modern">
+                                <option value="apple">Apple Pay</option>
+                                <option value="google">Google Pay</option>
+                                <option value="amazon">Amazon Pay</option>
+                                <option value="paypal">PayPal</option>
+                            </optgroup>
+                            <optgroup label="Credit Card">
+                                <option value="visa">VISA</option>
+                                <option value="mastercard">MasterCard</option>
+                                <option value="express">American Express</option>
+                            </optgroup>
+                            <optgroup label="Classics">
+                                <option value="sofort">Klarna</option>
+                                <option value="wire">Wire transfer</option>
+                                <option value="invoice">Invoice</option>
+                                <option value="check">Chashing check</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <hr>
+                    <button id="checkout-btn" class="btn btn-success btn-block" disabled>Checkout</button>
+                </form>
+            </div>
+        </div>
 
-					<hr>
-					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
-				</form>
-			</div>
-		</div>
+        <div class="col-lg-6">
+            <div class="box-shadow p-2 mt-3">
+                <a class="btn btn-outline-dark" href="{% url 'basket-default' %}">&#x2190; Change Order</a>
+                <hr>
+                <h3>Order Summary</h3>
+                <hr>
+                {% for item in items %}
+                    <div class="basket-row">
+                        <div style="flex:2"><img class="row-image" style="width: 100px;" src="{{ item.image }}"></div>
+                        <div style="flex:2"><p>{{ item.name }}</p></div>
+                        <div style="flex:2"><p>$ {{ item.price|floatformat:2 }}</p></div>
+                        <div style="flex:1"><p>x{{ item.quantity }}</p></div>
+                    </div>
+                {% endfor %}
+                <h5 class="mt-2">Total: <strong id='baskettotal2'>0</strong>$ (<strong>{{ item_total }}</strong> Items)
+                </h5>
+            </div>
+        </div>
+    </div>
 
-		<div class="col-lg-6">
-			<div class="box-shadow p-2 mt-3">
-				<a  class="btn btn-outline-dark" href="{% url 'basket-default' %}">&#x2190; Change Order</a>
-				<hr>
-				<h3>Order Summary</h3>
-				<hr>
-				{% for item in items %}
-				<div class="basket-row">
-					<div style="flex:2"><img class="row-image" src="{{item.image}}"></div>
-					<div style="flex:2"><p>{{item.name}}</p></div>
-					<div style="flex:1"><p>{{item.price|floatformat:2}}</p></div>
-					<div style="flex:1"><p>x{{item.quantity}}</p></div>
-				</div>
-				{% endfor %}
-				<h5>Total:   ${# TOTAL #}</h5>
-			</div>
-		</div>
-	</div>
-
-	{# js #}
+    {# js #}
 {% endblock content %}

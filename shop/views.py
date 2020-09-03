@@ -13,45 +13,66 @@ def product_list(request):
     return render(request, 'product_list.html', {'products': products})
 
 
-# TODO display based on order_id and customer
-#  he can view all his already placed baskets
-#  checkout button should then be disabled!
 @login_required
 def basket(request, order_id):
-    items = []
-    total_count = 0
-    if request.user.is_authenticated:
-        try:
-            order = Order.objects.get(customer_id=request.user, pk_x=order_id)
-            try:
-                # iterate all items from that order
-                cartitems = CartItem.objects.filter(order_id=order)
+    items, total_count, already_placed = get_basket_items(order_id, request)
 
-                for cartitem in cartitems:
-                    basketitem = dict()
-                    product = Product.objects.get(slug=cartitem.product_id)
-
-                    # add to separate structure that combines everything
-                    if cartitem.quantity > 0:
-                        basketitem['price'] = product.price
-                        basketitem['name'] = product.name
-                        basketitem['image'] = product.image
-                        basketitem['quantity'] = cartitem.quantity
-                        basketitem['slug'] = product.slug
-
-                        items.append(basketitem)
-                    total_count += cartitem.quantity
-
-            except CartItem.DoesNotExist:
-                pass
-        except Order.DoesNotExist:
-            pass
-    return render(request, 'basket.html', {'items': items, 'item_total': total_count, 'order_id': order_id})
+    return render(request, 'basket.html',
+                  {'items': items, 'item_total': total_count, 'order_id': order_id, 'placed': already_placed})
 
 
+# FIXME need default function same as basket!!
 @login_required
 def checkout(request, order_id):
-    return render(request, 'checkout.html', None)
+    # If we actually checkout
+    if request.POST:
+        pass  # TODO implement
+
+    items, total_count, _ = get_basket_items(order_id, request)
+    address = None
+    try:
+        address = Address.objects.get(user=request.user)
+    except Address.DoesNotExist:
+        pass
+
+    return render(request, 'checkout.html',
+                  {'items': items, 'item_total': total_count, 'order_id': order_id, 'address': address})
+
+
+def get_basket_items(order_id, request):
+    placed = False
+    items = []
+    total_count = 0
+    try:
+        order = Order.objects.get(customer_id=request.user, pk_x=order_id)
+        # iterate all items from that order
+        cartitems = CartItem.objects.filter(order_id=order)
+
+        for item in cartitems:
+            basketitem = dict()
+            product = Product.objects.get(slug=item.product_id)
+
+            # add to separate structure that combines everything
+            if item.quantity > 0:
+                basketitem['price'] = product.price
+                basketitem['name'] = product.name
+                basketitem['image'] = product.image
+                basketitem['quantity'] = item.quantity
+                basketitem['avaquantity'] = product.count
+                basketitem['slug'] = product.slug
+
+                items.append(basketitem)
+            total_count += item.quantity
+
+        placed = order.placed
+
+    except CartItem.DoesNotExist:
+        pass
+    except Order.DoesNotExist:
+        pass
+    except Product.DoesNotExist:
+        pass
+    return items, total_count, placed
 
 
 def basket_default(request):
@@ -64,8 +85,9 @@ def basket_default(request):
             pass
 
     return basket(request, pk_x)
-    pass
 
+
+# CDN ENDPOINT
 
 def add_basket(request, product_id):
     if request.user.is_authenticated:

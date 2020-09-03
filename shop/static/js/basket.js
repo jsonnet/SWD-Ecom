@@ -41,5 +41,7 @@ function basketTotal(dom_id, order_id) {
     xhr.send()
 }
 
-//TODO maybe put in some onload function
-basketTotal('baskettotal', -1)
+// Only page is loaded
+$(document).ready(function () {
+    basketTotal('baskettotal', -1)
+});

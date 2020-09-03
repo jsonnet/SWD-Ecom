@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
-{# TODO really in footer?? #}
 {% block footer %}
     <script type="text/javascript">
-    basketTotal("baskettotal2", {{ order_id }})
+        basketTotal("baskettotal2", {{ order_id }})
     </script>
 {% endblock %}
 
@@ -14,14 +13,15 @@
         {# upper div with Total and Checkout button #}
         <div class="col-lg-12">
             <div class="box-shadow">
-                {# FIXME HACK change table to container #}
                 <table class="table">
                     <tr>
                         <th>Total: <strong id='baskettotal2'>0</strong>$ (<strong>{{ item_total }}</strong> Items)</th>
-                        {# TODO needs to move down #}
                         <th>
-                            <a style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' 0 %}">Checkout</a>
-                            {# FIXME add order id #}
+                            {% if not placed and item_total %} {# Make sure to not display order button #}
+                                <a style="float:right; margin:5px;" class="btn btn-success"
+                                   href="{% url 'checkout' 0 %}">Checkout</a>
+                            {% endif %}
+                            Order No. {{ order_id }}
                         </th>
                     </tr>
                 </table>
@@ -47,10 +47,11 @@
                                                      src="{{ item.image }}">
                             </div>
                         {% endif %}
-                        <div style="flex:2"><p>{{ item.name }}</p></div>
+                        <div class="{% if item.avaquantity < item.quantity %} text-danger {% endif %}" style="flex:2">
+                            <p>{{ item.name }} {% if item.avaquantity < item.quantity %} (Please remove some! It is not
+                                available anymore) {% endif %}</p></div>
                         <div style="flex:1">
-                            {# TODO add if with quantity > count display red text #}
-                            <p class="d-inline-block">{{ item.quantity }}</p>
+                            <p class="d-inline-block {% if item.avaquantity < item.quantity %} text-danger {% endif %}">{{ item.quantity }}</p>
                             <div class="d-inline-block pl-3">
                                 <img onclick="removeBasket('{{ item.slug }}')" class="basket-arrow"
                                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Red_Arrow_Down.svg/768px-Red_Arrow_Down.svg.png">
