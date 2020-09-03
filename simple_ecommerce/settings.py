@@ -27,7 +27,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-
+INSTALLED_APPS = [
     'user_mgmt.apps.UserMgmtConfig',
     'shop_mgmt.apps.ShopMgmtConfig',
     'shop.apps.ShopConfig',
