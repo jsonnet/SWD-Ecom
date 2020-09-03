@@ -39,7 +39,7 @@ def product_list(request):
     _, token = is_authenticated(request)
 
     # get GET params (default 0 for int() )
-    page = int(request.GET.get('page', '0'))
+    page = int(request.GET.get('page', '1'))
     paginator = int(request.GET.get('paginator', '0'))
 
     # get all products from shop and requesting partner

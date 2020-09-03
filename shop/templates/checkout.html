@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block footer %}
+    <script type="text/javascript">
+        basketTotal("baskettotal2", {{ order_id }})
+
+        {% if address %}
+            $(document).ready(function () {
+                $("#shipping-field").hide();
+                $("#shipping-text").show();
+
+                {% if item_total > 0 and not placed %}
+                    $("#checkout-btn").prop('disabled', false);
+                {% endif %}
+
+                $("#address-btn").text("Change address")
+            });
+        {% endif %}
+
+        $(document).ready(function () {
+            // On button click "Change address"
+            $("#address-btn").click(function (e) {
+                if ($("#address-field").val())
+                    $("#street-text").text($("#address-field").val());
+
+                if ($("#addinfo-field").val())
+                    $("#add-text").text($("#addinfo-field").val());
+
+                if ($("#city-field").val())
+                    $("#city-text").text($("#zipcode-field").val() + " " + $("#city-field").val());
+
+                if ($("#country-field").val())
+                    $("#country-text").text($("#country-field").val());
+
+
+                $("#shipping-field").toggle();
+                $("#shipping-text").toggle();
+
+                if($("#address-btn").text() === "Change address")
+                    $("#address-btn").text("Save address")
+                else
+                    $("#address-btn").text("Change address")
+
+                {% if item_total > 0 and not placed %}
+                    $("#checkout-btn").prop('disabled', !$("#checkout-btn").prop('disabled'));
+                {% endif %}
+                e.preventDefault();
+            });
+
+            // On button click "Checkout"
+            $("#checkout-btn").click(function (e) {
+                if (!$("#payment").val()) { // if no payment was selected
+                    alert("Please select a payment option")
+                    e.preventDefault();
+                    return
+                }
+
+                if (!$("#city-text").text().trim() || !$("#street-text").text() || !$("#country-text").text()) {
+                    alert("Please fill out your address")
+                    e.preventDefault();
+                    return
+                }
+
+                var xhr = new XMLHttpRequest();   // new HttpRequest instance
+                xhr.open("POST", "");
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+
+                xhr.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status >= 200)
+                        if (this.status === 200)
+                            location.href = "../../"
+                        else // if something failed go to basket
+                            location.href = "../products/basket/"
+                };
+
+                // create full json model for endpoint with address, payment and products
+                data = JSON.stringify({
+                    street: $("#street-text").text(),
+                    additional_info: $("#add-text").text(),
+                    city: $("#city-text").text(),
+                    country: $("#country-text").text(),
+                    payment: $("#payment").val(),
+                    items: {
+                        {% for item in items %} "{{ item.slug }}":  {{ item.quantity }}, {% endfor %}
+                    },
+                })
+
+                xhr.send(data);
+
+                e.preventDefault();
+            });
+        });
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+    </script>
+{% endblock %}
+
+{% block headerText %}<h1>Confirm your Order</h1>{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box-shadow p-2 mt-3" id="form-wrapper">
+                <form id="form">
+                    <div id="shipping-info">
+                        <p>Shipping Information:</p>
+                        <hr>
+                        <div id="shipping-field">  {# $("#shipping-field").hide(); and $("#shipping-field").show(); #}
+                            <div class="form-field">
+                                <input class="form-control" type="text" id="address-field" placeholder="Address..">
+                            </div>
+                            <div class="form-field mt-1">
+                                <input class="form-control" type="text" id="addinfo-field"
+                                       placeholder="Additional info..">
+                            </div>
+                            <div class="form-field mt-1">
+                                <input class="form-control" type="text" id="city-field" placeholder="City..">
+                            </div>
+                            <div class="form-field mt-1">
+                                <input class="form-control" type="text" id="zipcode-field" placeholder="Zip code..">
+                            </div>
+                            <div class="form-field mt-1">
+                                <input class="form-control" type="text" id="country-field" placeholder="Country..">
+                            </div>
+                        </div>
+                        <div id="shipping-text" style="display:none;">
+                            <p id="name-text">{{ user.first_name }} {{ user.last_name }}</p>
+                            <p id="add-text">
+                                {% if address.additional_info %}{{ address.additional_info }}{% endif %}</p>
+                            <p id="street-text">{{ address.street }}</p>
+                            <p id="city-text">{{ address.zip_code }} {{ address.city }}</p>
+                            <p id="country-text">{{ address.country }}</p>
+                        </div>
+                        <button id="address-btn" class="btn btn-secondary btn-block mt-2">Save Address</button>
+                    </div>
+                    <div id="payment-info">
+                        <hr>
+                        <select class="custom-select" id="payment" required>
+                            <option disabled selected>Choose your payment option</option>
+                            <optgroup label="Modern">
+                                <option value="apple">Apple Pay</option>
+                                <option value="google">Google Pay</option>
+                                <option value="amazon">Amazon Pay</option>
+                                <option value="paypal">PayPal</option>
+                            </optgroup>
+                            <optgroup label="Credit Card">
+                                <option value="visa">VISA</option>
+                                <option value="mastercard">MasterCard</option>
+                                <option value="express">American Express</option>
+                            </optgroup>
+                            <optgroup label="Classics">
+                                <option value="sofort">Klarna</option>
+                                <option value="wire">Wire transfer</option>
+                                <option value="invoice">Invoice</option>
+                                <option value="check">Chashing check</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <hr>
+                    <button id="checkout-btn" class="btn btn-success btn-block" disabled>Checkout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="box-shadow p-2 mt-3">
+                <a class="btn btn-outline-dark" href="{% url 'basket-default' %}">&#x2190; Change Order</a>
+                <hr>
+                <h3>Order Summary</h3>
+                <hr>
+                {% for item in items %}
+                    <div class="basket-row">
+                        <div style="flex:2"><img class="row-image" style="width: 100px;" src="{{ item.image }}"></div>
+                        <div style="flex:2"><p>{{ item.name }}</p></div>
+                        <div style="flex:2"><p>$ {{ item.price|floatformat:2 }}</p></div>
+                        <div style="flex:1"><p>x{{ item.quantity }}</p></div>
+                    </div>
+                {% endfor %}
+                <h5 class="mt-2">Total: <strong id='baskettotal2'>0</strong>$ (<strong>{{ item_total }}</strong> Items)
+                </h5>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
