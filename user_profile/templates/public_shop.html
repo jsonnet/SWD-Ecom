@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
-Nothing to sell
+    <div class="row">
+        {% if products %}
+            {% for product in products %}
+                <div class="col-lg-4 mb-4 mt-1">
+                    <a href="../../shop/products/list#{{ product.slug }}">{{ product.name }}</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>This user has currently no items for selling</p>
+        {% endif %}
+    </div>
+
 
 {% endblock content %}
