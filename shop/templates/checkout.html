@@ -43,8 +43,14 @@
 
             // On button click "Checkout"
             $("#checkout-btn").click(function (e) {
-                if( !$("#payment").val() ) { // if no payment was selected
+                if (!$("#payment").val()) { // if no payment was selected
                     alert("Please select a payment option")
+                    e.preventDefault();
+                    return
+                }
+
+                if (!$("#city-text").text().trim() || !$("#street-text").text() || !$("#country-text").text()) {
+                    alert("Please fill out your address")
                     e.preventDefault();
                     return
                 }
@@ -56,15 +62,22 @@
 
                 xhr.onreadystatechange = function () {
                     if (this.readyState === XMLHttpRequest.DONE && this.status >= 200)
-                        console.log(this.responseText)
+                        if (this.status === 200)
+                            location.href = "../../"
+                        else // if something failed go to basket
+                            location.href = "../products/basket/"
                 };
 
+                // create full json model for endpoint with address, payment and products
                 data = JSON.stringify({
                     street: $("#street-text").text(),
                     additional_info: $("#add-text").text(),
                     city: $("#city-text").text(),
                     country: $("#country-text").text(),
-                    payment: $("#payment").val()
+                    payment: $("#payment").val(),
+                    items: {
+                        {% for item in items %} "{{ item.slug }}":  {{ item.quantity }}, {% endfor %}
+                    },
                 })
 
                 xhr.send(data);
