@@ -11,11 +11,18 @@
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onload = function () {
                 console.log('Signed in as: ' + xhr.responseText);
-                if (!xhr.responseText.includes('Error'))
-                    window.location.href="../../"
+                if (!xhr.responseText.includes('Error')) {
+                    var nhref = location.href.split('?').filter((nextF) => nextF.startsWith('next'))[0]
+                    if (nhref) // HACK for redirect after sso login
+                        window.location.href = "../.."+ nhref.substr(5)
+                    else
+                        window.location.href = "../../"
+                }
             };
             xhr.send('idtoken=' + id_token);
         }
+
+
     </script>
 
     <div class="content-section">

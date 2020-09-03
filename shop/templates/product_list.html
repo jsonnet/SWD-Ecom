@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block footer %}
+    <script>
+        // open collapse when designated in hash
+        window.onload = function () {
+            if (location.hash)
+                $('#product_details-' + location.hash.substr(1)).collapse()
+        }
+
+        // Only open one collapse at a time
+        $('button').click(function (e) {
+            $('.collapse').collapse('hide');
+        });
+
+        // Show tooltips (just for the red basket button)
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+
+{% endblock %}
+{% block content %}
+
+    <div class="row" id="productGroup">
+        {% for product in products %}
+            <div class="col-lg-4 mb-4 mt-1">
+                <img class="img-thumbnail box-shadow" src="{{ product.image }}">
+                <div class="box-shadow mt-1 p-2">
+
+                    {# Item name and price #}
+                    <strong>{{ product.name }}</strong>
+                    <b class="text-muted" style="float: right">${{ product.price }}</b>
+
+                    {# Custom popup (collapse) elememt with details #}
+                    <div class="collapse" id="product_details-{{ product.slug }}">
+                        <div class="card card-body">
+                            <p class="text-white">
+                            <div>{{ product.description }}</div>
+                            <hr>
+                            <div>Currently available: {{ product.count }}</div>
+                            {% if product.seller != "0" %}
+                                <small class="text-muted">Sold by {{ product.seller|slice:"2:" }}</small>
+                            {% else %}
+                                <small class="text-muted">Sold by Thin Air</small>
+                            {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    {# Buttons #}
+                    <hr class="mt-2 mb-3">
+                    <button onclick="location.hash = '{{ product.slug }}';" data-toggle="collapse" data-parent="#productGroup"
+                            data-target="#product_details-{{ product.slug }}"
+                            aria-expanded="false" class="btn btn-info">
+                        Details
+                    </button>
+                    {% if product.count != 0 %}
+                        <button onclick="addbasket('{{ product.slug }}', {{ product.price }})" class="btn btn-outline-success">Add to Basket
+                        </button>
+                    {% else %}
+                        <button onclick="addbasket('{{ product.slug }}', {{ product.price }})" data-toggle="tooltip" data-placement="bottom"
+                                title="Product currently unavailable" class="btn btn-outline-danger" disabled>Add
+                            to Basket
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock content %}

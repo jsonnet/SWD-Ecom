@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{% static 'css/nicest_ecommerce.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
@@ -23,9 +24,12 @@
             });
         }
     </script>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
     <meta name="google-signin-client_id"
           content="7641991400-s26aepc1u29217cleq028fl74l044cru.apps.googleusercontent.com">
     <title>{% block title %}Thin Air E-Commerce{% endblock %}</title>
+    {% block head %}
+    {% endblock %}
 </head>
 
 <body>
@@ -37,6 +41,16 @@
                 <span id="login_name"><b>Logged in as {{ user.username }}</b></span>
                 <a href="#">Account</a>
                 <a href="{% url 'logout' %}" onclick="signOut()">Logout</a>
+                <a style="float:right" href="{% url 'basket-default' %}" role="button"
+                   class="btn-sm btn-outline-dark pt-auto ml-2">
+                <span
+                        id="baskettotal">0</span>$ &#x2000;
+                    <svg width="16px" height="16px" viewBox="0 2 16 16" class="bi bi-basket-fill" fill="currentColor"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M5.071 1.243a.5.5 0 0 1 .858.514L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 6h1.717L5.07 1.243zM3.5 10.5a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3z"/>
+                    </svg>
+                </a>
             {% else %}
                 <a href="{% url 'login' %}">Login</a>
                 <a href="{% url 'registration' %}">Register</a>
@@ -48,6 +62,7 @@
 <!-- Side navigation -->
 <div class="sidenav">
     <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'product_list' %}">Marketplace</a>
 </div>
 
 
@@ -70,8 +85,10 @@
             {% endif %}
         </div>
         <div class="col-9">
-            <h1 class="mt-2">Thin Air LTD E-Commerce</h1>
-            <h3 class="text-muted"> the shop where you are going to be ripped of</h3>
+            {% block headerText %}
+                <h1 class="mt-2">Thin Air LTD E-Commerce</h1>
+                <h3 class="text-muted"> the shop where you are going to be ripped of</h3>
+            {% endblock %}
             <hr class="mt-0 mb-4">
             <div class="container">
                 {% block content %}
@@ -82,6 +99,9 @@
 
 </div>
 
+<script type="text/javascript" src="{% static "js/basket.js" %}"></script>
+{% block footer %}
+{% endblock %}
 
 </body>
 </html>

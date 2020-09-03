@@ -37,7 +37,7 @@ class UserProfile(AbstractUser):
     enabled = models.BooleanField(default=False)
 
     # A timestamp when this user was created. AUTO-GEN
-    datetime_joined = models.DateTimeField(verbose_name='datetime joined')
+    datetime_joined = models.DateTimeField(verbose_name='datetime joined', auto_now_add=True)
 
     # A unique token
     activation_token = models.CharField(max_length=32)
@@ -73,3 +73,4 @@ def set_new_user_inactive(sender, instance, **kwargs):
         instance.is_active = instance.enabled  # for verify
         instance.date_joined = instance.datetime_joined  # make it neater
         pass
+
