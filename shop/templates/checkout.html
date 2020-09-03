@@ -13,6 +13,8 @@
                 {% if item_total > 0 and not placed %}
                     $("#checkout-btn").prop('disabled', false);
                 {% endif %}
+
+                $("#address-btn").text("Change address")
             });
         {% endif %}
 
@@ -34,6 +36,11 @@
 
                 $("#shipping-field").toggle();
                 $("#shipping-text").toggle();
+
+                if($("#address-btn").text() === "Change address")
+                    $("#address-btn").text("Save address")
+                else
+                    $("#address-btn").text("Change address")
 
                 {% if item_total > 0 and not placed %}
                     $("#checkout-btn").prop('disabled', !$("#checkout-btn").prop('disabled'));
@@ -130,7 +137,7 @@
                             <p id="city-text">{{ address.zip_code }} {{ address.city }}</p>
                             <p id="country-text">{{ address.country }}</p>
                         </div>
-                        <button id="address-btn" class="btn btn-secondary btn-block mt-2">Change Address</button>
+                        <button id="address-btn" class="btn btn-secondary btn-block mt-2">Save Address</button>
                     </div>
                     <div id="payment-info">
                         <hr>
