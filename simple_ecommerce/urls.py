@@ -24,5 +24,6 @@ urlpatterns = [
     path('', views_eco.index, name='index'),
     path('admin/', admin.site.urls),
     path('accounts/', include('user_mgmt.urls')),
-    path('api/', include('shop_mgmt.urls'))
+    path('api/', include('shop_mgmt.urls')),
+    path('profile/', include('user_profile.urls'))
 ]
