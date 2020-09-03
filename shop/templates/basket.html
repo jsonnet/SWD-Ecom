@@ -19,7 +19,7 @@
                         <th>
                             {% if not placed and item_total %} {# Make sure to not display order button #}
                                 <a style="float:right; margin:5px;" class="btn btn-success"
-                                   href="{% url 'checkout' 0 %}">Checkout</a>
+                                   href="{% url 'checkout' order_id %}">Checkout</a>
                             {% endif %}
                             Order No. {{ order_id }}
                         </th>

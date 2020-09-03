@@ -10,11 +10,14 @@
                 $("#shipping-field").hide();
                 $("#shipping-text").show();
 
-                $("#checkout-btn").prop('disabled', false);
+                {% if item_total > 0 and not placed %}
+                    $("#checkout-btn").prop('disabled', false);
+                {% endif %}
             });
         {% endif %}
 
         $(document).ready(function () {
+            // On button click "Change address"
             $("#address-btn").click(function (e) {
                 if ($("#address-field").val())
                     $("#street-text").text($("#address-field").val());
@@ -32,16 +35,49 @@
                 $("#shipping-field").toggle();
                 $("#shipping-text").toggle();
 
-                $("#checkout-btn").prop('disabled', !$("#checkout-btn").prop('disabled'));
+                {% if item_total > 0 and not placed %}
+                    $("#checkout-btn").prop('disabled', !$("#checkout-btn").prop('disabled'));
+                {% endif %}
                 e.preventDefault();
             });
 
+            // On button click "Checkout"
             $("#checkout-btn").click(function (e) {
-                alert("yay")
+                if( !$("#payment").val() ) { // if no payment was selected
+                    alert("Please select a payment option")
+                    e.preventDefault();
+                    return
+                }
+
+                var xhr = new XMLHttpRequest();   // new HttpRequest instance
+                xhr.open("POST", "");
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+
+                xhr.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status >= 200)
+                        console.log(this.responseText)
+                };
+
+                data = JSON.stringify({
+                    street: $("#street-text").text(),
+                    additional_info: $("#add-text").text(),
+                    city: $("#city-text").text(),
+                    country: $("#country-text").text(),
+                    payment: $("#payment").val()
+                })
+
+                xhr.send(data);
 
                 e.preventDefault();
             });
         });
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
 
     </script>
 {% endblock %}
@@ -74,9 +110,9 @@
                             </div>
                         </div>
                         <div id="shipping-text" style="display:none;">
-                            {# $("#name-text").text("newvalue") <-- textContent #}
-                            <p id="name-text">MAX {{ address.user }}</p>
-                            <p id="add-text">{% if address.additional_info %}{{ address.additional_info }}{% endif %}</p>
+                            <p id="name-text">{{ user.first_name }} {{ user.last_name }}</p>
+                            <p id="add-text">
+                                {% if address.additional_info %}{{ address.additional_info }}{% endif %}</p>
                             <p id="street-text">{{ address.street }}</p>
                             <p id="city-text">{{ address.zip_code }} {{ address.city }}</p>
                             <p id="country-text">{{ address.country }}</p>
@@ -132,5 +168,4 @@
         </div>
     </div>
 
-    {# js #}
 {% endblock content %}

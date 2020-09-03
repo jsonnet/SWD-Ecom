@@ -1,3 +1,6 @@
+import json
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -25,10 +28,32 @@ def basket(request, order_id):
 @login_required
 def checkout(request, order_id):
     # If we actually checkout
-    if request.POST:
-        pass  # TODO implement
+    if request.method == "POST":
+        # TODO create a new address object and save
+        #  create a new payment object
+        #  add both to the order object
+        #  change placed and time in order object
+        #  send success message
+        #  also check again if every product was still available
+        params = json.loads(request.body.decode('utf-8'))
+        print(json.loads(request.body.decode('utf-8')))
+        print(request.user)
 
-    items, total_count, _ = get_basket_items(order_id, request)
+        street = params.get('street')
+        add_info = params.get('additional_info')
+        zip_city = params.get('city')  # needs to be split
+        country = params.get('country')
+        payment = params.get('payment')
+        amount = calc_total(order_id, request.user)
+
+        # TODO create objects
+
+        messages.error(request,
+                       'One or more items are currently not available anymore')  # this will show on the next request
+
+        return HttpResponse("success")
+
+    items, total_count, placed = get_basket_items(order_id, request)
     address = None
     try:
         address = Address.objects.get(user=request.user)
@@ -36,7 +61,8 @@ def checkout(request, order_id):
         pass
 
     return render(request, 'checkout.html',
-                  {'items': items, 'item_total': total_count, 'order_id': order_id, 'address': address})
+                  {'items': items, 'item_total': total_count, 'order_id': order_id, 'address': address,
+                   'placed': placed, 'user': request.user})
 
 
 def get_basket_items(order_id, request):
@@ -149,28 +175,28 @@ def remove_basket(request, product_id):
 def basket_total(request, order_id):
     total = 0.0
     if request.user.is_authenticated:
-        try:
-            order = Order.objects.get(customer_id=request.user, pk_x=order_id)
-            try:
-                cartitems = CartItem.objects.filter(order_id=order)
-
-                for cartitem in cartitems:
-                    try:
-
-                        product = Product.objects.get(slug=cartitem.product_id)
-                        total += float(product.price) * float(cartitem.quantity)
-
-                    except CartItem.DoesNotExist:
-                        print("hi")
-                        pass
-
-            except CartItem.DoesNotExist:
-                pass
-
-        except Order.DoesNotExist:
-            pass
+        total = calc_total(order_id, request.user)
 
     return HttpResponse(round(total, 2), content_type="text/plain")
+
+
+def calc_total(order_id, user):
+    total = 0.0
+    try:
+        order = Order.objects.get(customer_id=user, pk_x=order_id)
+        cartitems = CartItem.objects.filter(order_id=order)
+
+        for cartitem in cartitems:
+            product = Product.objects.get(slug=cartitem.product_id)
+            total += float(product.price) * float(cartitem.quantity)
+
+    except CartItem.DoesNotExist:
+        pass
+    except CartItem.DoesNotExist:
+        pass
+    except Order.DoesNotExist:
+        pass
+    return total
 
 
 def basket_total_default(request):
