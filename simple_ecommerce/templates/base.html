@@ -43,8 +43,7 @@
                 <a href="{% url 'logout' %}" onclick="signOut()">Logout</a>
                 <a style="float:right" href="{% url 'basket-default' %}" role="button"
                    class="btn-sm btn-outline-dark pt-auto ml-2">
-                <span
-                        id="baskettotal">0</span>$ &#x2000;
+                    <span id="baskettotal">{% if total %}{{ total }}{% endif %}</span> $ &#x2000;
                     <svg width="16px" height="16px" viewBox="0 2 16 16" class="bi bi-basket-fill" fill="currentColor"
                          xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd"

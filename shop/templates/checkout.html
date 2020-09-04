@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block footer %}
+    {# Yes we know this code is ugly but works #}
     <script type="text/javascript">
-        basketTotal("baskettotal2", {{ order_id }})
-
+        // if we have an address pre filled hide fields and show in DOM
         {% if address %}
             $(document).ready(function () {
                 $("#shipping-field").hide();
@@ -19,7 +19,7 @@
         {% endif %}
 
         $(document).ready(function () {
-            // On button click "Change address"
+            // On button click "Change address" set new values for address and toggle buttons
             $("#address-btn").click(function (e) {
                 if ($("#address-field").val())
                     $("#street-text").text($("#address-field").val());
@@ -48,7 +48,7 @@
                 e.preventDefault();
             });
 
-            // On button click "Checkout"
+            // On button click "Checkout" check if address is filled and payment option was selected then post to server
             $("#checkout-btn").click(function (e) {
                 if (!$("#payment").val()) { // if no payment was selected
                     alert("Please select a payment option")
@@ -62,7 +62,8 @@
                     return
                 }
 
-                var xhr = new XMLHttpRequest();   // new HttpRequest instance
+                // This could have been done with a form post but this was somewhat easier and also works
+                var xhr = new XMLHttpRequest();
                 xhr.open("POST", "");
                 xhr.setRequestHeader("Content-Type", "application/json");
                 xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
@@ -76,6 +77,8 @@
                 };
 
                 // create full json model for endpoint with address, payment and products
+                // for integrity there could be a hash with an secret be included by the template and check by the server
+                // or better even just with an form submit... oh well
                 data = JSON.stringify({
                     street: $("#street-text").text(),
                     additional_info: $("#add-text").text(),
@@ -182,7 +185,7 @@
                         <div style="flex:1"><p>x{{ item.quantity }}</p></div>
                     </div>
                 {% endfor %}
-                <h5 class="mt-2">Total: <strong id='baskettotal2'>0</strong>$ (<strong>{{ item_total }}</strong> Items)
+                <h5 class="mt-2">Total: <strong>{{ total }}</strong>$ (<strong>{{ item_total }}</strong> Items)
                 </h5>
             </div>
         </div>

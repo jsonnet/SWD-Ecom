@@ -10,12 +10,16 @@ from user_mgmt.models import UserProfile
 @login_required
 def private_profile(request, email):
     if str(request.user) == email:
-        # FIXME check empty for order and address
+        # No need to catch something as a empty QuerySet is handled in template
         orders = Order.objects.filter(customer_id=request.user)
 
         address = Address.objects.filter(user=request.user)
-        address = address.reverse()[0]  # once we have multiple addresses use the last one
+        try:
+            address = address.reverse()[0]  # once we have multiple addresses use the last one
+        except IndexError:
+            pass
 
+        # Cannot throw error, as the user is obviously login in with this User
         profile = UserProfile.objects.get(username=email)
 
         return render(request, 'private_profile.html', {'orders': orders, 'address': address, 'profile': profile})

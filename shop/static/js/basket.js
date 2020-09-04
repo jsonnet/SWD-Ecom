@@ -1,4 +1,4 @@
-function addbasket(product_id, product_price) {
+function addbasket(product_id) {
     var xhr = new XMLHttpRequest()
 
     xhr.onreadystatechange = function () {
@@ -6,7 +6,7 @@ function addbasket(product_id, product_price) {
             if (this.responseText === "login")
                 window.location.href = '/accounts/login/?next=/shop/add-basket/' + product_id;
             else
-                basketTotal('baskettotal', -1)
+                basketTotal('baskettotal')
     }
 
     xhr.open("GET", "/shop/add-basket/" + product_id)
@@ -25,7 +25,7 @@ function removeBasket(product_id) {
     xhr.send()
 }
 
-function basketTotal(dom_id, order_id) {
+function basketTotal(dom_id) {
     var xhr = new XMLHttpRequest()
 
     xhr.onreadystatechange = function () {
@@ -34,14 +34,11 @@ function basketTotal(dom_id, order_id) {
             document.getElementById(dom_id).textContent = this.responseText
     }
 
-    if (order_id === -1)
-        xhr.open("GET", "/shop/basket-total/")
-    else
-        xhr.open("GET", "/shop/basket-total/" + order_id)
+    xhr.open("GET", "/shop/basket-total/")
     xhr.send()
 }
 
 // Only page is loaded
 $(document).ready(function () {
-    basketTotal('baskettotal', -1)
+    basketTotal('baskettotal')
 });
