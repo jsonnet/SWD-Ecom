@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="{% static 'css/nicest_ecommerce.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <title>{% block title %}High Air E-Commerce{% endblock %}</title>
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+
+<nav class="navbar navbar-default" id="login_bar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+                <a href="#">Account</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Side navigation -->
+<div class="sidenav">
+    <a href="#">Home</a>
+</div>
+
+
+<!-- Page content -->
+<div class="main">
+    <div class="row mt-4 justify-content-center">
+        <div class="col-md-8">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-9">
+            {% block headerText %}
+                <h1 class="mt-2">High Air LTD E-Commerce</h1>
+                <h3 class="text-muted"> the shop where you are going to be high as a kite</h3>
+            {% endblock %}
+            <hr class="mt-0 mb-4">
+            <div class="container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
