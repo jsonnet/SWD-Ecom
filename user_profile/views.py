@@ -32,5 +32,6 @@ def private_profile(request, email):
 def public_store(request, email):
 
     products = Product.objects.filter(seller=f'u-{email}')
+    owner = str(request.user) == email
 
-    return render(request, 'public_shop.html', {'products': products})
+    return render(request, 'public_shop.html', {'products': products, 'owner': owner})

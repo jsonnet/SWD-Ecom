@@ -10,9 +10,10 @@
         // library setup
         window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
         // create a tracker
-        //ga('create', 'UA-XXXXX-Y', 'auto');
-        // send a page view commmand to the command queue.
-        //ga('send', 'pageview');
+        {% if owner == False %}
+        ga('create', 'UA-177290897-1', 'auto');
+        ga('send', 'pageview');
+        {% endif %}
     </script>
     <script async src='https://www.google-analytics.com/analytics.js'></script>
     <!-- End Google Analytics -->
@@ -51,7 +52,7 @@
         <div class="navbar-header">
             {% if user.is_authenticated %}
                 <span id="login_name"><b>Logged in as {{ user.username }}</b></span>
-                <a href="#">Account</a>
+                <a href="{% url 'private_profile' request.user %}">Account</a>
                 <a href="{% url 'logout' %}" onclick="signOut()">Logout</a>
                 <a style="float:right" href="{% url 'basket-default' %}" role="button"
                    class="btn-sm btn-outline-dark pt-auto ml-2">

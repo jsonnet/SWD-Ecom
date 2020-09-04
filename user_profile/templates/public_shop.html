@@ -1,18 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <iframe style="display:none" id="destination-frame" src="http://127.0.0.1:2000/high-air/" onload="test()"></iframe>
+    {% if owner == False %}
+    <iframe style="display:none" id="destination-frame" src="http://127.0.0.1:2000/high-air/" onload="sendtoHighAir()"></iframe>
     <script>
-        function test() {
+        function sendtoHighAir() {
             console.log("iframe loaded!")
-            ga('create', 'UA-XXXXX-Y', 'auto');
-            ga('send', 'pageview');
 
             ga(function (tracker) {
-                console.log(tracker);
-
                 // Gets the client ID of the default tracker.
                 var clientId = tracker.get('clientId');
+                console.log(clientId)
 
                 // Gets a reference to the window object of the destionation iframe.
                 var frameWindow = document.getElementById('destination-frame').contentWindow;
@@ -23,6 +21,7 @@
             });
         }
     </script>
+    {% endif %}
 
     <div class="row">
         {% if products %}

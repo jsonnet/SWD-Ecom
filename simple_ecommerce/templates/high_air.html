@@ -20,19 +20,18 @@
     <title>{% block title %}High Air E-Commerce{% endblock %}</title>
 
     <script>
-        console.log("i am here")
-
         window.addEventListener('message', function (event) {
             console.log("received")
             // Ignores messages from untrusted sources, only allow thin-air's origin
-            if (event.origin !== 'http://127.0.0.1:3000') return;
+            if (event.origin !== 'http://127.0.0.1:3000' && event.origin !== 'http://localhost:3000') return;
+            console.log(event.data)
 
             // Create a tracker and store the client id
-            ga('create ', 'UA-XXXXX-Y ', 'auto', {
+            ga('create ', 'UA-177290897-1 ', 'auto', {
                 clientId: event.data
             });
 
-            console.log("good to go!")
+            console.log("GA created!")
         });
     </script>
 
