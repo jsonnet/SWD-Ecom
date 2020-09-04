@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from shop.models import Address, Order
 from shop_mgmt.models import Product
@@ -27,6 +28,7 @@ def private_profile(request, email):
     return HttpResponse(status=401)
 
 
+@xframe_options_exempt
 @login_required
 def public_store(request, email):
 

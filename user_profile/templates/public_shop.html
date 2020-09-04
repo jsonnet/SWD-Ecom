@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <iframe id="destination−frame" src="http://127.0.0.1:2000/high-air/"></iframe>
+    <iframe id="destination-frame" src="http://127.0.0.1:2000/high-air/"></iframe>
     <script>
         ga(function (tracker) {
             // Gets the client ID of the default tracker.
-            var clientId = tracker.get('clientId ');
+            var clientId = tracker.get('clientId');
             // Gets a reference to the window object of the destionation iframe.
-            var frameWindow = document.getElementById('destination-frame ').contentWindow;
+            var frameWindow = document.getElementById('destination-frame').contentWindow;
             // Sends the client ID to the window inside the destination frame.
-            frameWindow.postMessage(clientId, 'http://127.0.0.1:2000 ');
+            frameWindow.postMessage(clientId, 'http://127.0.0.1:2000');
         });
     </script>
 
