@@ -28,7 +28,6 @@ def private_profile(request, email):
     return HttpResponse(status=401)
 
 
-@xframe_options_exempt
 @login_required
 def public_store(request, email):
 

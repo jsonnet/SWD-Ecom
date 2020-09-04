@@ -9,7 +9,7 @@
             // Gets a reference to the window object of the destionation iframe.
             var frameWindow = document.getElementById('destination-frame').contentWindow;
             // Sends the client ID to the window inside the destination frame.
-            frameWindow.postMessage(clientId, 'http://127.0.0.1:2000');
+            frameWindow.postMessage(clientId, 'http://127.0.0.1:3000'); // FIXME should be 2000?
         });
     </script>
 
