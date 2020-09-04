@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "password": "pbkdf2_sha256$216000$LQd92O1vYEL8$ghs0SndevmnEge0f3bYIaTREKMTXAIqXHLrllDuw9ec=",
-      "last_login": "2020-08-29T22:38:25.107Z",
+      "last_login": "2020-09-04T15:54:04.146Z",
       "is_superuser": true,
       "email": "",
       "is_staff": true,
@@ -25,7 +25,7 @@
     "pk": 3,
     "fields": {
       "password": "!6T2HspGheEnVge5g4jKpKLtc472q0R2xHjpXHAMQ",
-      "last_login": "2020-08-28T23:24:29.501Z",
+      "last_login": "2020-09-04T10:37:45.521Z",
       "is_superuser": false,
       "email": "",
       "is_staff": false,
@@ -39,35 +39,6 @@
       "activation_token": "0",
       "groups": [],
       "user_permissions": []
-    }
-  },
-  {
-    "model": "user_mgmt.userprofile",
-    "pk": 5,
-    "fields": {
-      "password": "pbkdf2_sha256$216000$LRjs8hB2aG4Y$XI+bMX5XxuLmiY24BXeGQDAtDwQwOLVv93mxuJklhYQ=",
-      "last_login": "2020-08-28T23:13:14Z",
-      "is_superuser": false,
-      "email": "",
-      "is_staff": false,
-      "is_active": true,
-      "date_joined": "2020-08-28T23:22:36.603Z",
-      "username": "abc@de.fg",
-      "first_name": "avd",
-      "last_name": "dfe",
-      "enabled": true,
-      "datetime_joined": "2020-08-28T23:22:36.603Z",
-      "activation_token": "P6AUOwvbpS5GhcsWBYpHQ0IOAHTMzD4c",
-      "groups": [],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "user_mgmt.pwresettoken",
-    "pk": 2,
-    "fields": {
-      "username": 1,
-      "token": "123"
     }
   },
   {
@@ -89,6 +60,15 @@
     }
   },
   {
+    "model": "shop_mgmt.partner",
+    "pk": 4,
+    "fields": {
+      "name": "Testing Partner old",
+      "web_site": null,
+      "token": "mD8kOkkl6lJEJcKGzhtfQTQ0DxEWbGdS"
+    }
+  },
+  {
     "model": "shop_mgmt.product",
     "pk": 1,
     "fields": {
@@ -97,8 +77,8 @@
       "slug": "rave-cave",
       "price": "1337.420",
       "special_price": "1337.410",
-      "count": 42,
-      "image": "http://localhost",
+      "count": 41,
+      "image": "https://pbs.twimg.com/media/EbdfZMIWAAARulM.jpg",
       "seller": "p-abc"
     }
   },
@@ -111,8 +91,8 @@
       "slug": "techno-ball",
       "price": "123.450",
       "special_price": null,
-      "count": 2,
-      "image": null,
+      "count": 0,
+      "image": "https://c8.alamy.com/comp/BRG6MN/techno-ball-rendered-in-3d-on-mirror-like-surface-with-bright-colourful-BRG6MN.jpg",
       "seller": "0"
     }
   },
@@ -125,8 +105,8 @@
       "slug": "prankster",
       "price": "1009.320",
       "special_price": null,
-      "count": 92,
-      "image": null,
+      "count": 2,
+      "image": "https://geo-media.beatport.com/image/4573eb68-767b-4eb2-8338-991f7978f8bf.jpg",
       "seller": "0"
     }
   },
@@ -140,8 +120,786 @@
       "price": "56.780",
       "special_price": null,
       "count": 34,
-      "image": null,
-      "seller": "0"
+      "image": "https://img.discogs.com/-_wIAcdKu1xGZhqcfeeLvY8uGCM=/fit-in/300x300/filters:strip_icc():format(jpeg):mode_rgb():quality(40)/discogs-images/L-356534-1391958616-1670.png.jpg",
+      "seller": "u-y@y.yy"
+    }
+  },
+  {
+    "model": "shop_mgmt.product",
+    "pk": 6,
+    "fields": {
+      "name": "test3",
+      "description": "foo",
+      "slug": "test3",
+      "price": "123.450",
+      "special_price": "-1.000",
+      "count": 1,
+      "image": "",
+      "seller": "p-abc"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 1,
+    "fields": {
+      "amount": "8671.430",
+      "method": "express"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 2,
+    "fields": {
+      "amount": "8671.430",
+      "method": "paypal"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 3,
+    "fields": {
+      "amount": "1337.420",
+      "method": "apple"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 4,
+    "fields": {
+      "amount": "2346.740",
+      "method": "invoice"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 5,
+    "fields": {
+      "amount": "1507.760",
+      "method": "wire"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 6,
+    "fields": {
+      "amount": "2674.840",
+      "method": "sofort"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 7,
+    "fields": {
+      "amount": "2674.840",
+      "method": "amazon"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 8,
+    "fields": {
+      "amount": "2674.840",
+      "method": "mastercard"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 9,
+    "fields": {
+      "amount": "2674.840",
+      "method": "amazon"
+    }
+  },
+  {
+    "model": "shop.payment",
+    "pk": 10,
+    "fields": {
+      "amount": "2346.740",
+      "method": "google"
+    }
+  },
+  {
+    "model": "shop.address",
+    "pk": 10,
+    "fields": {
+      "user": "y@y.yy",
+      "street": "Ystreet 27",
+      "city": "Yhausen",
+      "zip_code": "98765",
+      "country": "Yland",
+      "additional_info": ""
+    }
+  },
+  {
+    "model": "shop.order",
+    "pk": 6,
+    "fields": {
+      "customer_id": 1,
+      "placed": true,
+      "date_placed": "2020-09-04T15:46:03.683Z",
+      "shipping_address": 10,
+      "payment": 10
+    }
+  },
+  {
+    "model": "shop.order",
+    "pk": 7,
+    "fields": {
+      "customer_id": 1,
+      "placed": false,
+      "date_placed": "2020-09-04T15:47:06.457Z",
+      "shipping_address": null,
+      "payment": null
+    }
+  },
+  {
+    "model": "shop.cartitem",
+    "pk": 12,
+    "fields": {
+      "product_id": "prankster",
+      "quantity": 1,
+      "order_id": 6
+    }
+  },
+  {
+    "model": "shop.cartitem",
+    "pk": 16,
+    "fields": {
+      "product_id": "rave-cave",
+      "quantity": 1,
+      "order_id": 6
+    }
+  },
+  {
+    "model": "shop.cartitem",
+    "pk": 17,
+    "fields": {
+      "product_id": "rave-cave",
+      "quantity": 2,
+      "order_id": 7
+    }
+  },
+  {
+    "model": "shop.cartitem",
+    "pk": 18,
+    "fields": {
+      "product_id": "prankster",
+      "quantity": 1,
+      "order_id": 7
+    }
+  },
+  {
+    "model": "shop.cartitem",
+    "pk": 19,
+    "fields": {
+      "product_id": "the-hood-of-sound",
+      "quantity": 1,
+      "order_id": 7
+    }
+  },
+  {
+    "model": "shop.cartitem",
+    "pk": 20,
+    "fields": {
+      "product_id": "test3",
+      "quantity": 1,
+      "order_id": 7
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 1,
+      "codename": "add_userprofile"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 1,
+      "codename": "change_userprofile"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 1,
+      "codename": "delete_userprofile"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 1,
+      "codename": "view_userprofile"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": {
+      "name": "Can add pw reset token",
+      "content_type": 2,
+      "codename": "add_pwresettoken"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": {
+      "name": "Can change pw reset token",
+      "content_type": 2,
+      "codename": "change_pwresettoken"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": {
+      "name": "Can delete pw reset token",
+      "content_type": 2,
+      "codename": "delete_pwresettoken"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": {
+      "name": "Can view pw reset token",
+      "content_type": 2,
+      "codename": "view_pwresettoken"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": {
+      "name": "Can add partner",
+      "content_type": 3,
+      "codename": "add_partner"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": {
+      "name": "Can change partner",
+      "content_type": 3,
+      "codename": "change_partner"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": {
+      "name": "Can delete partner",
+      "content_type": 3,
+      "codename": "delete_partner"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": {
+      "name": "Can view partner",
+      "content_type": 3,
+      "codename": "view_partner"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": {
+      "name": "Can add product",
+      "content_type": 4,
+      "codename": "add_product"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": {
+      "name": "Can change product",
+      "content_type": 4,
+      "codename": "change_product"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": {
+      "name": "Can delete product",
+      "content_type": 4,
+      "codename": "delete_product"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": {
+      "name": "Can view product",
+      "content_type": 4,
+      "codename": "view_product"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": {
+      "name": "Can add address",
+      "content_type": 5,
+      "codename": "add_address"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": {
+      "name": "Can change address",
+      "content_type": 5,
+      "codename": "change_address"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": {
+      "name": "Can delete address",
+      "content_type": 5,
+      "codename": "delete_address"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": {
+      "name": "Can view address",
+      "content_type": 5,
+      "codename": "view_address"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": {
+      "name": "Can add cart item",
+      "content_type": 6,
+      "codename": "add_cartitem"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": {
+      "name": "Can change cart item",
+      "content_type": 6,
+      "codename": "change_cartitem"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": {
+      "name": "Can delete cart item",
+      "content_type": 6,
+      "codename": "delete_cartitem"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": {
+      "name": "Can view cart item",
+      "content_type": 6,
+      "codename": "view_cartitem"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": {
+      "name": "Can add order",
+      "content_type": 7,
+      "codename": "add_order"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": {
+      "name": "Can change order",
+      "content_type": 7,
+      "codename": "change_order"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": {
+      "name": "Can delete order",
+      "content_type": 7,
+      "codename": "delete_order"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": {
+      "name": "Can view order",
+      "content_type": 7,
+      "codename": "view_order"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": {
+      "name": "Can add payment",
+      "content_type": 8,
+      "codename": "add_payment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": {
+      "name": "Can change payment",
+      "content_type": 8,
+      "codename": "change_payment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": {
+      "name": "Can delete payment",
+      "content_type": 8,
+      "codename": "delete_payment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": {
+      "name": "Can view payment",
+      "content_type": 8,
+      "codename": "view_payment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 33,
+    "fields": {
+      "name": "Can add log entry",
+      "content_type": 9,
+      "codename": "add_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 34,
+    "fields": {
+      "name": "Can change log entry",
+      "content_type": 9,
+      "codename": "change_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 35,
+    "fields": {
+      "name": "Can delete log entry",
+      "content_type": 9,
+      "codename": "delete_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 36,
+    "fields": {
+      "name": "Can view log entry",
+      "content_type": 9,
+      "codename": "view_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 37,
+    "fields": {
+      "name": "Can add permission",
+      "content_type": 10,
+      "codename": "add_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 38,
+    "fields": {
+      "name": "Can change permission",
+      "content_type": 10,
+      "codename": "change_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 39,
+    "fields": {
+      "name": "Can delete permission",
+      "content_type": 10,
+      "codename": "delete_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 40,
+    "fields": {
+      "name": "Can view permission",
+      "content_type": 10,
+      "codename": "view_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 41,
+    "fields": {
+      "name": "Can add group",
+      "content_type": 11,
+      "codename": "add_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 42,
+    "fields": {
+      "name": "Can change group",
+      "content_type": 11,
+      "codename": "change_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 43,
+    "fields": {
+      "name": "Can delete group",
+      "content_type": 11,
+      "codename": "delete_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 44,
+    "fields": {
+      "name": "Can view group",
+      "content_type": 11,
+      "codename": "view_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 45,
+    "fields": {
+      "name": "Can add content type",
+      "content_type": 12,
+      "codename": "add_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 46,
+    "fields": {
+      "name": "Can change content type",
+      "content_type": 12,
+      "codename": "change_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 47,
+    "fields": {
+      "name": "Can delete content type",
+      "content_type": 12,
+      "codename": "delete_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 48,
+    "fields": {
+      "name": "Can view content type",
+      "content_type": 12,
+      "codename": "view_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 49,
+    "fields": {
+      "name": "Can add session",
+      "content_type": 13,
+      "codename": "add_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 50,
+    "fields": {
+      "name": "Can change session",
+      "content_type": 13,
+      "codename": "change_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 51,
+    "fields": {
+      "name": "Can delete session",
+      "content_type": 13,
+      "codename": "delete_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 52,
+    "fields": {
+      "name": "Can view session",
+      "content_type": 13,
+      "codename": "view_session"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+      "app_label": "user_mgmt",
+      "model": "userprofile"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+      "app_label": "user_mgmt",
+      "model": "pwresettoken"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+      "app_label": "shop_mgmt",
+      "model": "partner"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+      "app_label": "shop_mgmt",
+      "model": "product"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+      "app_label": "shop",
+      "model": "address"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+      "app_label": "shop",
+      "model": "cartitem"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+      "app_label": "shop",
+      "model": "order"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+      "app_label": "shop",
+      "model": "payment"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": {
+      "app_label": "admin",
+      "model": "logentry"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 10,
+    "fields": {
+      "app_label": "auth",
+      "model": "permission"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 11,
+    "fields": {
+      "app_label": "auth",
+      "model": "group"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 12,
+    "fields": {
+      "app_label": "contenttypes",
+      "model": "contenttype"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 13,
+    "fields": {
+      "app_label": "sessions",
+      "model": "session"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "h8hche20zsp35644f3lvqg6hjccetvb1",
+    "fields": {
+      "session_data": ".eJxVjMsOwiAQRf-FtSE8Biku3fcbyAwMUjU0Ke3K-O_apAvd3nPOfYmI21rj1nmJUxYXocXpdyNMD247yHdst1mmua3LRHJX5EG7HOfMz-vh_h1U7PVbOx9IY_bBUtEO1WDQOdDgwCsA7QKTIrZMRWFIasjI1mQ0NpyhQLDi_QHL8Ddm:1kE99L:wNYndtzYpUKcu0My5QSQlVxq5Lg-UwKnFlEE1bC8Yx0",
+      "expire_date": "2020-09-18T10:40:55.569Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "ka9tx1tsgo8b1grf3j7ka8qorcg151vg",
+    "fields": {
+      "session_data": ".eJxVjMsOwiAQRf-FtSE8Biku3fcbyAwMUjU0Ke3K-O_apAvd3nPOfYmI21rj1nmJUxYXocXpdyNMD247yHdst1mmua3LRHJX5EG7HOfMz-vh_h1U7PVbOx9IY_bBUtEO1WDQOdDgwCsA7QKTIrZMRWFIasjI1mQ0NpyhQLDi_QHL8Ddm:1kEE2O:vrfATAVUsfEgAVj5yr3CwA3C6ouQNySBOocJtDQjfCU",
+      "expire_date": "2020-09-18T15:54:04.148Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "yrhm1pe4be2l16is0txy4dxht3eue2oe",
+    "fields": {
+      "session_data": ".eJxVjMsOwiAQRf-FtSE8Biku3fcbyAwMUjU0Ke3K-O_apAvd3nPOfYmI21rj1nmJUxYXocXpdyNMD247yHdst1mmua3LRHJX5EG7HOfMz-vh_h1U7PVbOx9IY_bBUtEO1WDQOdDgwCsA7QKTIrZMRWFIasjI1mQ0NpyhQLDi_QHL8Ddm:1kEDzi:2oN38mZRBENZZ2b6rzD6Wk8QCfSSAEuG4XNUhiyiX1c",
+      "expire_date": "2020-09-18T15:51:18.490Z"
     }
   }
 ]

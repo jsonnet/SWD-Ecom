@@ -64,6 +64,7 @@ def checkout(request, order_id):
         pay = Payment(amount=float(amount), method=payment)
         pay.save()
 
+        # Sry to stuff the database with the same address
         address = Address(user=request.user, street=street, city=zip_city.split(' ', 1)[1],
                           zip_code=zip_city.split(' ', 1)[0], country=country, additional_info=add_info)
         address.save()

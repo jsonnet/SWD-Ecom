@@ -135,3 +135,13 @@ def product_create(request):
         return HttpResponse('Syntax error when creating a product\n', status=422)
 
     return HttpResponse("Product created \n", status=201)
+
+
+# @TA You can use this function under /api/test/createPartner to create a new partner for testing the API
+def testing_partner(request):
+    try:
+        test_partner = Partner(name="Testing Partner")
+        test_partner.save()
+    except:
+        pass
+    return HttpResponse(f"test_partner: Bearer Token {test_partner.token}")
