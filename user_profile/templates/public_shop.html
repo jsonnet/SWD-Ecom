@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+    {% if owner == False %}
+    <iframe style="display:none" id="destination-frame" src="http://127.0.0.1:2000/high-air/" onload="sendtoHighAir()"></iframe>
+    <script>
+        function sendtoHighAir() {
+            console.log("iframe loaded!")
+
+            ga(function (tracker) {
+                // Gets the client ID of the default tracker.
+                var clientId = tracker.get('clientId');
+                console.log(clientId)
+
+                // Gets a reference to the window object of the destionation iframe.
+                var frameWindow = document.getElementById('destination-frame').contentWindow;
+
+                // Sends the client ID to the window inside the destination frame.
+                frameWindow.postMessage(clientId, 'http://127.0.0.1:2000');
+                console.log("send!")
+            });
+        }
+    </script>
+    {% endif %}
+
+    <div class="row">
+        {% if products %}
+            {% for product in products %}
+                <div class="col-lg-4 mb-4 mt-1">
+                    <a href="../../shop/products/list#{{ product.slug }}">{{ product.name }}</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>This user has currently no items for selling</p>
+        {% endif %}
+    </div>
+
+
+{% endblock content %}

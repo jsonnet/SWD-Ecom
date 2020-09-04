@@ -25,5 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('user_mgmt.urls')),
     path('api/', include('shop_mgmt.urls')),
-    path('shop/', include('shop.urls'))
+    path('shop/', include('shop.urls')),
+    path('profile/', include('user_profile.urls')),
+    path('high-air/', views_eco.high_air, name='high-air') 
 ]

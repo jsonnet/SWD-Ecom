@@ -19,19 +19,38 @@ def product_list(request):
 
 @login_required
 def basket(request, order_id):
+    # Fills the basket :D
     items, total_count, already_placed = get_basket_items(order_id, request)
+    total = calc_total(order_id, request.user)
 
     return render(request, 'basket.html',
-                  {'items': items, 'item_total': total_count, 'order_id': order_id, 'placed': already_placed})
+                  {'items': items, 'item_total': total_count, 'total': total, 'order_id': order_id, 'placed': already_placed})
+
+
+# When accessing basket without order id
+def basket_default(request):
+    pk_x = -1
+    if request.user.is_authenticated:
+        try:
+            # Find last non placed order
+            order = Order.objects.get(customer_id=request.user, placed=False)
+            pk_x = order.pk_x
+        except Order.DoesNotExist:
+            pass
+
+    # Returns the right order or -1 thus empty when no order is open
+    # and a new order is only created when an item is added
+    return basket(request, pk_x)
 
 
 @login_required
 def checkout(request, order_id):
     # If we actually checkout
     if request.method == "POST":
-        params = json.loads(request.body.decode('utf-8'))
-        print(json.loads(request.body.decode('utf-8')))
-        print(request.user)
+        try:
+            params = json.loads(request.body.decode('utf-8'))
+        except:
+            return HttpResponse(status=400)
 
         street = params.get('street')
         add_info = params.get('additional_info').strip()
@@ -45,6 +64,7 @@ def checkout(request, order_id):
         pay = Payment(amount=float(amount), method=payment)
         pay.save()
 
+        # Sry to stuff the database with the same address
         address = Address(user=request.user, street=street, city=zip_city.split(' ', 1)[1],
                           zip_code=zip_city.split(' ', 1)[0], country=country, additional_info=add_info)
         address.save()
@@ -70,21 +90,22 @@ def checkout(request, order_id):
         messages.success(request, 'Thanks for your purchase')
         return HttpResponse("success")
 
+    # GET case
     items, total_count, placed = get_basket_items(order_id, request)
-    address = None
+    total = calc_total(order_id, request.user)
+
+    address = Address.objects.filter(user=request.user)
     try:
-        address = Address.objects.filter(user=request.user)
         address = address.reverse()[0]  # once we have multiple addresses use the last one
-    except Address.DoesNotExist:
-        pass
     except IndexError:
         pass
 
     return render(request, 'checkout.html',
-                  {'items': items, 'item_total': total_count, 'order_id': order_id, 'address': address,
+                  {'items': items, 'item_total': total_count, 'total': total, 'order_id': order_id, 'address': address,
                    'placed': placed, 'user': request.user})
 
 
+# Helper function for getting all items in basket, amount
 def get_basket_items(order_id, request):
     placed = False
     items = []
@@ -94,6 +115,7 @@ def get_basket_items(order_id, request):
         # iterate all items from that order
         cartitems = CartItem.objects.filter(order_id=order)
 
+        # if cartitem was empty for will do nothing
         for item in cartitems:
             basketitem = dict()
             product = Product.objects.get(slug=item.product_id)
@@ -112,25 +134,13 @@ def get_basket_items(order_id, request):
 
         placed = order.placed
 
-    except CartItem.DoesNotExist:
-        pass
     except Order.DoesNotExist:
         pass
     except Product.DoesNotExist:
-        pass
+        pass  # This won't break anything just give back a incomplete basket, but should never happen
+    except:
+        pass  # For extra resilience :pray:
     return items, total_count, placed
-
-
-def basket_default(request):
-    pk_x = -1
-    if request.user.is_authenticated:
-        try:
-            order = Order.objects.get(customer_id=request.user, placed=False)
-            pk_x = order.pk_x
-        except Order.DoesNotExist:
-            pass
-
-    return basket(request, pk_x)
 
 
 # CDN ENDPOINT
@@ -158,69 +168,44 @@ def add_basket(request, product_id):
         item.order_id = order
 
         item.save()
+
+        # this ensures that if the user was not logged in and got a redirect after logging in thus gets redirected
+        # to the this /add-basket site we will be redirected again to the basket and not get stuck on this plain page
         return redirect('basket-default')
     else:
+        # Signals that a login is required
         return HttpResponse('login', content_type="text/plain")
 
 
 def remove_basket(request, product_id):
     if request.user.is_authenticated:
-        order = Order()
 
-        # create new order if not exists
         try:
             order = Order.objects.get(customer_id=request.user, placed=False)
         except Order.DoesNotExist:
-            order.customer_id = request.user
-            order.save()
+            return HttpResponse('error', status=400, content_type="text/plain")
 
         # check if item exists already
-        item = CartItem()
         try:
             item = CartItem.objects.get(product_id=product_id, order_id=order)
-            item.quantity = item.quantity - 1
-            item.order_id = order
-            print(item.quantity)
-            if item.quantity <= 0:
-                item.delete()
-            else:
-                item.save()
-
         except CartItem.DoesNotExist:
-            pass
+            return HttpResponse('error', status=400, content_type="text/plain")
+
+        item.quantity = item.quantity - 1
+        item.order_id = order
+
+        if item.quantity <= 0:
+            item.delete()
+        else:
+            item.save()
 
     return HttpResponse('done', content_type="text/plain")
 
 
-def basket_total(request, order_id):
-    total = 0.0
-    if request.user.is_authenticated:
-        total = calc_total(order_id, request.user)
-
-    return HttpResponse(round(total, 2), content_type="text/plain")
-
-
-def calc_total(order_id, user):
-    total = 0.0
-    try:
-        order = Order.objects.get(customer_id=user, pk_x=order_id)
-        cartitems = CartItem.objects.filter(order_id=order)
-
-        for cartitem in cartitems:
-            product = Product.objects.get(slug=cartitem.product_id)
-            total += float(product.price) * float(cartitem.quantity)
-
-    except CartItem.DoesNotExist:
-        pass
-    except CartItem.DoesNotExist:
-        pass
-    except Order.DoesNotExist:
-        pass
-    return total
-
-
+# Retrieve order_id by itself (order that's not placed)
 def basket_total_default(request):
     order_id = -1
+    total = 0.0
     if request.user.is_authenticated:
         try:
             order = Order.objects.get(customer_id=request.user, placed=False)
@@ -228,4 +213,25 @@ def basket_total_default(request):
         except Order.DoesNotExist:
             pass
 
-    return basket_total(request, order_id)
+        total = calc_total(order_id, request.user)
+
+    return HttpResponse(total, content_type="text/plain")
+
+
+# Helper function to calculate total of basket
+def calc_total(order_id, user):
+    total = 0.0
+    try:
+        order = Order.objects.get(customer_id=user, pk_x=order_id)
+        cartitems = CartItem.objects.filter(order_id=order)
+
+        # if cartitems was empty loop won't start and thus total remains 0
+        for cartitem in cartitems:
+            product = Product.objects.get(slug=cartitem.product_id)
+            total += float(product.price) * float(cartitem.quantity)
+
+    except Order.DoesNotExist:
+        pass
+    except:  # Shouldn't be needed
+        pass
+    return round(total, 2)

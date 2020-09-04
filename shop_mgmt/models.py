@@ -4,11 +4,10 @@ from django.utils.crypto import get_random_string
 from django.utils.text import slugify
 
 
-# TODO check params for each key
 class Partner(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
     name = models.CharField(max_length=30)
-    web_site = models.URLField()
+    web_site = models.URLField(blank=True, null=True)
     token = models.CharField(max_length=32)
 
     def save(self, *args, **kwargs):
@@ -21,7 +20,6 @@ class Partner(models.Model):
         return self.name
 
 
-# TODO check params for each key
 class Product(models.Model):
     pk_x = models.AutoField(primary_key=True, db_column='pk')  # pk is a reserved word in python!
     name = models.CharField(max_length=30)
@@ -31,12 +29,12 @@ class Product(models.Model):
     special_price = models.DecimalField(decimal_places=3, max_digits=8, null=True, blank=True)
     count = models.IntegerField()
     image = models.URLField(null=True, blank=True)
-    seller = models.CharField(max_length=22, default=0)  # 0 default, u-<id> customer, p-<id> partner
+    seller = models.CharField(max_length=35, default=0)  # 0 default, u-<id> customer, p-<id> partner
 
     REQUIRED_FIELDS = ['name', 'description', 'price', 'count']
 
     def save(self, *args, **kwargs):
-        # TODO maybe make slug be uniquely created by appending pk?
+        # maybe make slug be uniquely with pk --> solution, we cannot create a product with the same name twice!
         # slug auto-gen'd by name
         self.slug = slugify(self.name)
 

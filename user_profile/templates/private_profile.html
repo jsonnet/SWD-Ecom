@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="col">
+        <div class="row-lg-4 mb-4 mt-1" id="profile">
+            <h3>Profile Details</h3>
+            <p>{{ profile.first_name }} {{ profile.last_name }}</p>
+            <p>Email: {{ profile.username }}</p>
+            <p>Joined on: {{ profile.datetime_joined }}</p>
+        </div>
+        <hr>
+        <div class="row-lg-4 mb-4 mt-1" id="address">
+            <h3>Last Address</h3>
+            {% if address %}
+                <p>{{ user.first_name }} {{ user.last_name }}</p>
+                <p> {% if address.additional_info %}{{ address.additional_info }}{% endif %}</p>
+                <p>{{ address.street }}</p>
+                <p>{{ address.zip_code }} {{ address.city }}</p>
+                <p>{{ address.country }}</p>
+            {% endif %}
+        </div>
+        <hr>
+        <div class="row-lg-4 mb-4 mt-1" id="orders">
+            <h3>Recent Orders</h3>
+            {% for order in orders %}
+                <a href="../../shop/checkout/{{ order.pk }}">Order no. {{ order.pk }}</a>
+                <p>on {{ order.date_placed }}</p>
+            {% endfor %}
+        </div>
+
+        <hr>
+        So private, that there is nothing more here.
+    </div>
+
+{% endblock content %}

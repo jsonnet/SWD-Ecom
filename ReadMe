@@ -1,0 +1,7 @@
+Database Seeds
+-You can either use the function under /api/test/createPartner to create a new partner for the purpose of testing the API (you get a token displayed)
+- Or you can even go as far as using the fixture.json to load existing data into the database by using `manage.py loaddata fixture.json`
+- Another way would be to access the /admin panel, as every model if accessible from there user either `manage.py createsuperuser` (or use y@y.yy with pw: y when loading our fixture)
+
+SSO
+As the Google only allows an actual URL you have to use localhost:3000 for being able to log in with google, with 127.0.0.1 google will always tell you invalid_request, even though it is added to the whitelist (--> this is an intended behavior by Google!)
